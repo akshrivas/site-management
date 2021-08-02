@@ -14,6 +14,22 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
+import Icon from '@mdi/react'
+import { mdiPencilOutline } from '@mdi/js'
+import { mdiCartOutline } from '@mdi/js'
+import { mdiDeleteOutline } from '@mdi/js'
+import AddProducts from 'src/components/AddProducts';
+
 
 const useRowStyles = makeStyles({
   root: {
@@ -21,6 +37,17 @@ const useRowStyles = makeStyles({
       borderBottom: 'unset',
     },
   },
+  appBar: {
+    position: 'relative',
+  },
+  title: {
+    // marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+});
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function createData(name, calories, fat, carbs, protein, price) {
@@ -41,6 +68,16 @@ function createData(name, calories, fat, carbs, protein, price) {
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const [dialogs, setDialogs] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setDialogs(true);
+  };
+
+  const handleClose = () => {
+    setDialogs(false);
+  };
+
   const classes = useRowStyles();
 
   return (
@@ -52,27 +89,32 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.name} 
         </TableCell>
         <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell>{row.fat}</TableCell>
+        <TableCell align="center">{row.carbs}</TableCell>
+        {/* <TableCell align="right">{row.protein}</TableCell> */}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                Products
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell>Product Name</TableCell>
+                    <TableCell>Added date</TableCell>
+                    <TableCell align="right">Units</TableCell>
+                    <TableCell>Decryption</TableCell>
+                    <TableCell align="right">Original Price</TableCell>
+                    <TableCell align="right">Discount(%)</TableCell>
+                    <TableCell align="right">Price</TableCell>
+                    <TableCell>SKU</TableCell>
+                    <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -83,8 +125,31 @@ function Row(props) {
                       </TableCell>
                       <TableCell>{historyRow.customerId}</TableCell>
                       <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
+                      <TableCell>
                         {Math.round(historyRow.amount * row.price * 100) / 100}
+                      </TableCell>
+                      <TableCell align="right">{historyRow.customerId}</TableCell>
+                      <TableCell align="right">{historyRow.customerId}</TableCell>
+                      <TableCell align="right">{historyRow.customerId}</TableCell>
+                      <TableCell>{historyRow.customerId}</TableCell>
+                      <TableCell>
+                        <Icon onClick={handleClickOpen} path={mdiPencilOutline}
+                        title="User Profile"
+                        size={1}
+                        color="#434242"
+                        style={{marginRight: 5}}
+                        />
+                        <Icon path={mdiCartOutline}
+                        title="User Profile"
+                        size={1}
+                        color="#434242"
+                        style={{marginRight: 5}}
+                        />
+                        <Icon path={mdiDeleteOutline}
+                        title="User Profile"
+                        size={1}
+                        color="#434242"
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -94,6 +159,22 @@ function Row(props) {
           </Collapse>
         </TableCell>
       </TableRow>
+      <Dialog fullScreen open={dialogs} onClose={handleClose} TransitionComponent={Transition}>
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              Add Products
+            </Typography>
+            <Button autoFocus color="inherit" onClick={handleClose}>
+              save
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <AddProducts />
+      </Dialog>
     </React.Fragment>
   );
 }
@@ -117,11 +198,9 @@ Row.propTypes = {
 };
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
+  createData('Vegetables', 1, "All Fresh products", 24,),
+  createData('Fruits', 4, "All Fresh products", 24,),
+
 ];
 
 export default function GroupList() {
@@ -131,11 +210,11 @@ export default function GroupList() {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell>Group</TableCell>
+            <TableCell align="right">No. of Products</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell align="center">Action</TableCell>
+            {/* <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
