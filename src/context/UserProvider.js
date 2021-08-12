@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from './AuthProvider';
 import PageSpinner from '../components/PageSpinner'
 
-const LoggedIn = ({ children }) => {
+const UserProvider = ({ children }) => {
   const { authUser, loading } = useAuth();
   const router = useRouter();
 
@@ -27,4 +27,4 @@ const LoggedIn = ({ children }) => {
   )
 }
 
-export default LoggedIn;
+export default UserProvider;
