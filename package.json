@@ -9,13 +9,17 @@
     "@mdi/react": "^1.5.0",
     "clsx": "latest",
     "firebase": "^8.9.1",
+    "formik": "^2.2.9",
     "next": "latest",
     "prop-types": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "yup": "^0.32.9"
   },
-  "babel":{
-    "presets": ["next/babel"]
+  "babel": {
+    "presets": [
+      "next/babel"
+    ]
   },
   "scripts": {
     "dev": "next",
