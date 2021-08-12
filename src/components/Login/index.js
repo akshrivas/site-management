@@ -33,6 +33,12 @@ function Copyright() {
 
 export default function Login() {
   const classes = useStyles();
+  const [user, setUser] = useState({
+    email: 'admin@homeo.com',
+    password: 'admin1234'
+  });
+  const [error, setError] = useState(null);
+  const router = useRouter();
   const validationSchema = yup.object({
     email: yup
       .string()
@@ -42,12 +48,19 @@ export default function Login() {
     .string()
     .required('This field is required.')
   });
-  const [user, setUser] = useState({
-    email: '',
-    password: ''
-  });
+  const { signInWithEmailAndPassword } = useAuth();
   const handleSubmit = (values) => {
-    console.log(`submitted with ${values}`);
+    console.log(`submitted with ${JSON.stringify(values)}`);
+    setError(null)
+    signInWithEmailAndPassword(values.email, values.password)
+    .then(authUser => {
+      console.log(authUser)
+      router.push('/dashboard');
+    })
+    .catch(error => {
+      console.log(error)
+      setError(error.message)
+    });
   }
   const formik = useFormik({
     initialValues: { ...user },
