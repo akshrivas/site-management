@@ -14,7 +14,7 @@
     "react-dom": "latest"
   },
   "scripts": {
-    "dev": "next",
+    "dev": "set PORT=3002 && next",
     "build": "next build",
     "start": "next start",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest",
