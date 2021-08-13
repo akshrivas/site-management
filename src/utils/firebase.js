@@ -1,6 +1,7 @@
 import { firebaseConfig } from '../config'
 import Firebase from 'firebase';
 import 'firebase/auth';
+import 'firebase/firestore';
 
 const FirebaseCredentials = {
     ...firebaseConfig
