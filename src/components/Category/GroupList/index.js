@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -29,6 +30,7 @@ import { mdiPencilOutline } from '@mdi/js'
 import { mdiCartOutline } from '@mdi/js'
 import { mdiDeleteOutline } from '@mdi/js'
 import AddProducts from 'src/components/AddProducts';
+import { urlConstants } from '../../../config';
 
 
 const useRowStyles = makeStyles({
@@ -96,7 +98,7 @@ function Row(props) {
         <TableCell align="center">{row.carbs}</TableCell>
         {/* <TableCell align="right">{row.protein}</TableCell> */}
       </TableRow>
-      <TableRow>
+      {/* <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
@@ -158,7 +160,7 @@ function Row(props) {
             </Box>
           </Collapse>
         </TableCell>
-      </TableRow>
+      </TableRow> */}
       <Dialog fullScreen open={dialogs} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
@@ -203,7 +205,18 @@ const rows = [
 
 ];
 
-export default function GroupList() {
+export default function GroupList({ activeCategory }) {
+  const [groups, setGroups] = useState([])
+  useEffect(() => {
+    (async () => {
+      if(activeCategory){
+        let userId = `dQ5UsfoCpYVed1NjeAJOXqx9lNt1`;
+        const groupsRes = await axios.get(`${urlConstants.getGroups}?userId=${userId}&category=${activeCategory.id}`);
+        console.log(groupsRes.data)
+        setGroups(groupsRes.data.groups);
+      }
+    })()
+  }, [activeCategory])
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -218,7 +231,7 @@ export default function GroupList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {groups.map((row) => (
             <Row key={row.name} row={row} />
           ))}
         </TableBody>

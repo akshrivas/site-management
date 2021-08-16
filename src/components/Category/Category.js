@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -23,6 +24,8 @@ import FormLabel from '@material-ui/core/FormLabel';
 import {useStyles} from './categorystyles';
 import CategoryList from './CategoryList';
 import GroupList from './GroupList';
+import { urlConstants } from '../../config'
+import { mdiNotebookMultiple } from '@mdi/js';
 
 const styles = (theme) => ({
   root: {
@@ -66,9 +69,33 @@ const DialogActions = withStyles((theme) => ({
 
 export default function Category() {
   const classes = useStyles();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [categories, setCategories] = useState([])
+  const [activeCategory, setActiveCategory] = useState(null)
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    (async () => {
+      setLoading(true)
+      let userId = `dQ5UsfoCpYVed1NjeAJOXqx9lNt1`;
+      const res = await axios.get(`${urlConstants.getUsers}/${userId}`)
+      const { data } = res;
+      let activeItem = null;
+      const categories = [...data.categories].map((item, index) => {
+        if(index == 0){
+          activeItem = item
+          return {
+            ...item,
+            active: true
+          }
+        }
+        else return item
+      })
+      setActiveCategory({...activeItem});
+      setCategories([...categories]);
+      console.log('Loaded')
+      setLoading(false)
+    })()
+  }, [0])
   const [open, setOpen] = React.useState(false);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -83,6 +110,11 @@ export default function Category() {
   return (
     <>
     <div className={classes.root}>
+      {
+        loading?
+        'Loading...'
+        : null
+      }
       <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{display: 'none'}}>
        Create Category
       </Button>
@@ -104,7 +136,7 @@ export default function Category() {
             </div>
             <div style={{marginTop: '10px'}}>
               <Paper>
-                <CategoryList />
+                <CategoryList categories={categories} setActiveCategory={setActiveCategory} />
               </Paper>
               
             </div>
@@ -131,10 +163,10 @@ export default function Category() {
               >
               <Grid item>
               <Typography variant="h6" gutterBottom>
-                Category Title
+                {activeCategory ? activeCategory.name: 'Category Name'}
               </Typography>
               <Typography variant="p" gutterBottom>
-                Category Description here
+                {activeCategory ? activeCategory.description: 'Category Description'}
               </Typography>
               </Grid>
               <Grid item className={classes.actionItem}>
@@ -145,7 +177,7 @@ export default function Category() {
               </Grid>
             </Paper>
             <div style={{marginTop: '10px'}}>
-            <GroupList />
+            <GroupList activeCategory={activeCategory} />
             </div>
           </Grid>
       </Grid>

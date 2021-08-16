@@ -10,44 +10,35 @@ import WorkIcon from '@material-ui/icons/Work';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      width: '100%',
-      maxWidth: '100%',
-      backgroundColor: theme.palette.background.paper,
-    },
+  root: {
+    width: '100%',
+    maxWidth: '100%',
+    backgroundColor: theme.palette.background.paper,
+  },
 }));
 
-export default function categoryList() {
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const classes = useStyles();
+export default function categoryList({ categories, setActiveCategory }) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+
+  const classes = useStyles();
   return (
     <>
-    <List className={classes.root}>
-      <ListItem button >
-        <ListItemAvatar>
-          <Avatar>
-            <ImageIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="Category One" secondary="category description examples" />
-      </ListItem>
-      <ListItem button >
-        <ListItemAvatar>
-          <Avatar>
-            <WorkIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="Category Two" secondary="category description examples" />
-      </ListItem>
-      <ListItem button >
-        <ListItemAvatar>
-          <Avatar>
-            <BeachAccessIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="Category There" secondary="category description examples" />
-      </ListItem>
-    </List>
+      <List className={classes.root}>
+        {
+          categories.map((item) => {
+            return (
+              <ListItem button key={item.id} onClick={() => setActiveCategory(item)}>
+                <ListItemAvatar>
+                  <Avatar>
+                    <ImageIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={item.name} secondary={item.description} />
+              </ListItem>
+            )
+          })
+        }
+      </List>
     </>
   );
 }
