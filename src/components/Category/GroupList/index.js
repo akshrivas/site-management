@@ -94,7 +94,7 @@ function Row(props) {
           {row.name} 
         </TableCell>
         <TableCell align="right">{row.calories}</TableCell>
-        <TableCell>{row.fat}</TableCell>
+        <TableCell>{row.description}</TableCell>
         <TableCell align="center">{row.carbs}</TableCell>
         {/* <TableCell align="right">{row.protein}</TableCell> */}
       </TableRow>
@@ -194,6 +194,7 @@ Row.propTypes = {
       }),
     ).isRequired,
     name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     protein: PropTypes.number.isRequired,
   }).isRequired,
@@ -219,7 +220,9 @@ export default function GroupList({ activeCategory }) {
   }, [activeCategory])
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
+      {
+        groups.length?
+        <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
@@ -236,6 +239,8 @@ export default function GroupList({ activeCategory }) {
           ))}
         </TableBody>
       </Table>
+      : 'No groups created'
+      }
     </TableContainer>
   );
 }
