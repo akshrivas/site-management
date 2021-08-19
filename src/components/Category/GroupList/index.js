@@ -31,6 +31,8 @@ import { mdiCartOutline } from '@mdi/js'
 import { mdiDeleteOutline } from '@mdi/js'
 import AddProducts from 'src/components/AddProducts';
 import { urlConstants } from '../../../config';
+import { useSelector } from 'react-redux';
+import { useFirestoreConnect } from 'react-redux-firebase';
 
 
 const useRowStyles = makeStyles({
@@ -49,7 +51,7 @@ const useRowStyles = makeStyles({
 });
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function createData(name, calories, fat, carbs, protein, price) {
@@ -91,7 +93,7 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name} 
+          {row.name}
         </TableCell>
         <TableCell align="right">{row.calories}</TableCell>
         <TableCell>{row.description}</TableCell>
@@ -207,39 +209,51 @@ const rows = [
 ];
 
 export default function GroupList({ activeCategory }) {
-  const [groups, setGroups] = useState([])
-  useEffect(() => {
-    (async () => {
-      if(activeCategory){
-        let userId = `dQ5UsfoCpYVed1NjeAJOXqx9lNt1`;
-        const groupsRes = await axios.get(`${urlConstants.getGroups}?userId=${userId}&category=${activeCategory.id}`);
-        console.log(groupsRes.data)
-        setGroups(groupsRes.data.groups);
-      }
-    })()
-  }, [activeCategory])
+  let firestoreObj = {
+    collection: 'users'
+  }
+  if(activeCategory){
+    firestoreObj = {
+      collection: 'users',
+      doc: 'dQ5UsfoCpYVed1NjeAJOXqx9lNt1',
+      subcollections: [
+        {
+          collection: 'categories',
+          doc: activeCategory ? activeCategory.id : '',
+        },
+        {
+          collection: 'groups'
+        }
+      ],
+      storeAs: 'groups'
+    }
+  }
+  useFirestoreConnect([
+    {...firestoreObj}
+  ])
+  const groups = useSelector(state => state.firestore.ordered.groups || [])
   return (
     <TableContainer component={Paper}>
       {
-        groups.length?
-        <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Group</TableCell>
-            <TableCell align="right">No. of Products</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell align="center">Action</TableCell>
-            {/* <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {groups.map((row) => (
-            <Row key={row.name} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-      : 'No groups created'
+        groups && groups.length ?
+          <Table aria-label="collapsible table">
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>Group</TableCell>
+                <TableCell align="right">No. of Products</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell align="center">Action</TableCell>
+                {/* <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {groups.map((row) => (
+                <Row key={row.name} row={row} />
+              ))}
+            </TableBody>
+          </Table>
+          : 'No groups created'
       }
     </TableContainer>
   );

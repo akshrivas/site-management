@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import React from 'react';
-// import axios from 'axios';
 import UserProvider from 'src/context/UserProvider';
 import DashboardComponent from 'src/components/Dashboard';
 

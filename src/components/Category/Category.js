@@ -19,13 +19,13 @@ import FormControl from '@material-ui/core/FormControl';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import SaveIcon from '@material-ui/icons/Save';
-
 import FormLabel from '@material-ui/core/FormLabel';
+
 import {useStyles} from './categorystyles';
 import CategoryList from './CategoryList';
 import GroupList from './GroupList';
-import { urlConstants } from '../../config'
-import { mdiNotebookMultiple } from '@mdi/js';
+import useCategories from './useCategories';
+
 
 const styles = (theme) => ({
   root: {
@@ -69,32 +69,8 @@ const DialogActions = withStyles((theme) => ({
 
 export default function Category() {
   const classes = useStyles();
-  const [categories, setCategories] = useState([])
-  const [activeCategory, setActiveCategory] = useState(null)
-  const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    (async () => {
-      setLoading(true)
-      let userId = `dQ5UsfoCpYVed1NjeAJOXqx9lNt1`;
-      const res = await axios.get(`${urlConstants.getUsers}/${userId}`)
-      const { data } = res;
-      let activeItem = null;
-      const categories = [...data.categories].map((item, index) => {
-        if(index == 0){
-          activeItem = item
-          return {
-            ...item,
-            active: true
-          }
-        }
-        else return item
-      })
-      setActiveCategory({...activeItem});
-      setCategories([...categories]);
-      console.log('Loaded')
-      setLoading(false)
-    })()
-  }, [0])
+  const categories = useCategories();
+  const [activeCategory, setActiveCategory] = useState(null);
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -110,16 +86,9 @@ export default function Category() {
   return (
     <>
     <div className={classes.root}>
-      {
-        loading?
-        'Loading...'
-        : null
-      }
       <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{display: 'none'}}>
        Create Category
       </Button>
-
-
       <Grid container spacing={3} alignItems="stretch">
           <Grid item xs={12} sm={3}>
             <div>
