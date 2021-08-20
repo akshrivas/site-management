@@ -75,10 +75,10 @@ export default function AddCategory({
     });
     useEffect(() => {
         if(activeCategory){
-            formik.setValues({...activeCategory});
+            formik.setValues({...activeCategory}, false);
         }
         else{
-            formik.setValues({ ...category });
+            formik.setValues({ ...category }, false);
         }
     }, [activeCategory])
     const uid = useUid();
@@ -123,7 +123,7 @@ export default function AddCategory({
                         name: '',
                         description: '',
                         visible: 'show'
-                    });
+                    }, false);
                 }
                 else{
                     console.log(response)
@@ -185,7 +185,7 @@ export default function AddCategory({
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={formik.handleSubmit} color="primary" type="submit">
-                    Create
+                    {activeCategory ? 'Update' : 'Create'}
                 </Button>
             </DialogActions>
         </Dialog>

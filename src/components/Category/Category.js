@@ -14,7 +14,7 @@ import GroupList from './GroupList';
 import AddCategory from './AddCategory';
 import AddGroup from './AddGroup';
 import useCategories from './useCategories';
-import DeleteCategory from '../DeleteCategory';
+import DeleteCategory from './DeleteCategory';
 
 export default function Category() {
   const classes = useStyles();
