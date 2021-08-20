@@ -19,7 +19,7 @@ function Index() {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   return {
     redirect: {
       permanent: false,
