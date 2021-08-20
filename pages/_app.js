@@ -9,18 +9,16 @@ import { Provider } from 'react-redux';
 import { wrapper, newStore } from 'src/redux';
 import { createFirestoreInstance } from 'redux-firestore';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
-import firebase from 'firebase/app';
+import firebase from 'src/utils/firebase';
 import { firebaseConfig } from 'src/config';
 
 function MyApp(props) {
-  const rrfConfig = { userProfile: 'users',
-  useFirestoreForProfile: true,
-  attachAuthIsReady: true,
-}; // react-redux-firebase config
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
   const store = newStore();
+  const rrfConfig = {
+    userProfile: 'users',
+    useFirestoreForProfile: true,
+    attachAuthIsReady: true,
+  };
   const rrfProps = {
     firebase,
     config: rrfConfig,

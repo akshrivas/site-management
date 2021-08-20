@@ -43,7 +43,7 @@ export default function Category() {
 
   const handleGroupOpen = () => {
     setGroupOpen(true);
-  }  
+  }
   return (
     <>
       <div className={classes.root}>
@@ -102,10 +102,10 @@ export default function Category() {
                 <Grid item className={classes.actionItem}>
                   {
                     activeCategory ?
-                    <>
-                      <Button variant="outlined" onClick={handleGroupOpen}>Add Group</Button>
-                      <Button variant="outlined" onClick={() => handleClickOpen('edit')}>Edit</Button> 
-                      <Button variant="outlined" onClick={() => setDeleteOpen(true)}>Delete</Button>
+                      <>
+                        <Button variant="outlined" onClick={handleGroupOpen}>Add Group</Button>
+                        <Button variant="outlined" onClick={() => handleClickOpen('edit')}>Edit</Button>
+                        <Button variant="outlined" onClick={() => setDeleteOpen(true)}>Delete</Button>
                       </>
                       : null
                   }
