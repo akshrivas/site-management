@@ -10,7 +10,6 @@ import { wrapper, newStore } from 'src/redux';
 import { createFirestoreInstance } from 'redux-firestore';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import firebase from 'src/utils/firebase';
-import { firebaseConfig } from 'src/config';
 
 function MyApp(props) {
   const store = newStore();
