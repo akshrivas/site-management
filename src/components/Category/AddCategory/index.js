@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import * as yup from 'yup';
@@ -21,6 +21,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { urlConstants } from 'src/config';
+import useUid from 'src/utils/useUid';
 
 const styles = (theme) => ({
     root: {
@@ -64,14 +65,23 @@ const DialogActions = withStyles((theme) => ({
 
 export default function AddCategory({
     handleClose,
-    open
+    open,
+    activeCategory
 }) {
     const [category, setCategory] = useState({
         name: '',
         description: '',
         visible: 'show'
     });
-    const uid = useSelector((state) => state.firebase.auth.uid);
+    useEffect(() => {
+        if(activeCategory){
+            formik.setValues({...activeCategory});
+        }
+        else{
+            formik.setValues({ ...category });
+        }
+    }, [activeCategory])
+    const uid = useUid();
     const validationSchema = yup.object({
         name: yup
             .string()
@@ -85,21 +95,43 @@ export default function AddCategory({
     });
     const handleSubmit = (values) => {
         console.log(`submitted with ${JSON.stringify(values)}`);
-        axios.post(urlConstants.addCategory, {
-            data: {
-                category: values,
-                userId: uid
-            }
-        }).then((response) => {
-            if(response.data.id){
-                handleClose()
-            }
-            else{
-                console.log(response)
-            }
-        }).catch((err) => {
-            console.log(err)
-        })
+        if(activeCategory){
+            axios.put(`${urlConstants.categoryOps}/${activeCategory.id}`, {
+                    category: values,
+                    userId: uid
+            }).then(() => {
+                    handleClose()
+                    formik.setValues({
+                        name: '',
+                        description: '',
+                        visible: 'show'
+                    });
+            }).catch((err) => {
+                console.log(err)
+            }) 
+        }
+        else{
+            axios.post(urlConstants.addCategory, {
+                data: {
+                    category: values,
+                    userId: uid
+                }
+            }).then((response) => {
+                if(response.data.id){
+                    handleClose()
+                    formik.setValues({
+                        name: '',
+                        description: '',
+                        visible: 'show'
+                    });
+                }
+                else{
+                    console.log(response)
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
     }
     const formik = useFormik({
         initialValues: { ...category },

@@ -23,16 +23,19 @@ export default function Category() {
   const [open, setOpen] = useState(false);
   const [groupOpen, setGroupOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [mode, setMode] = useState(null);
   useEffect(() => {
     if (categories && categories.length) {
       setActiveCategory(categories[0])
     }
   }, [categories])
-  const handleClickOpen = () => {
+  const handleClickOpen = (val) => {
     setOpen(true);
+    setMode(val);
   };
   const handleClose = () => {
     setOpen(false);
+    setMode(null);
   };
   const handleGroupClose = () => {
     setGroupOpen(false);
@@ -74,7 +77,7 @@ export default function Category() {
                 size="large"
                 className={classes.button}
                 startIcon={<SaveIcon />}
-                onClick={handleClickOpen}
+                onClick={() => handleClickOpen('add')}
               >
                 Add Category
               </Button>
@@ -101,7 +104,7 @@ export default function Category() {
                     activeCategory ?
                     <>
                       <Button variant="outlined" onClick={handleGroupOpen}>Add Group</Button>
-                      <Button variant="outlined" onClick={handleClickOpen}>Edit</Button> 
+                      <Button variant="outlined" onClick={() => handleClickOpen('edit')}>Edit</Button> 
                       <Button variant="outlined" onClick={() => setDeleteOpen(true)}>Delete</Button>
                       </>
                       : null
@@ -114,7 +117,7 @@ export default function Category() {
             </div>
           </Grid>
         </Grid>
-        <AddCategory open={open} handleClose={handleClose} />
+        <AddCategory open={open} handleClose={handleClose} activeCategory={mode == 'edit' ? activeCategory : null} />
         <DeleteCategory open={deleteOpen} handleClose={() => setDeleteOpen(false)} categoryId={activeCategory ? activeCategory.id : ''} />
         <AddGroup open={groupOpen} handleClose={handleGroupClose} categoryId={activeCategory ? activeCategory.id : ''} />
       </div>

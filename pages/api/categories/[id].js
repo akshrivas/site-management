@@ -2,11 +2,11 @@ import db from 'src/utils/db';
 
 export default async (req, res) => {
     const { id } = req.query;
-    const { userId } = req.body;
+    const { userId, category } = req.body;
     try {
         if (req.method === 'PUT') {
             await db.collection(`users/${userId}/categories`).doc(id).update({
-                ...data.category,
+                ...category,
                 updated: new Date().toISOString(),
             });
         } else if (req.method === 'DELETE') {
