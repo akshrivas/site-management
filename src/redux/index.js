@@ -8,16 +8,16 @@ import { firebaseConfig } from '../config';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 const initialState = {};
 export const newStore = () => {
-return createStore(
-rootReducer,
-initialState,
-composeWithDevTools(
-applyMiddleware(thunk.withExtraArgument({ 
-     getFirebase, getFirestore 
-     }
-    )
-   ), reduxFirestore(firebaseConfig)
-  )
- );
+     return createStore(
+          rootReducer,
+          initialState,
+          composeWithDevTools(
+               applyMiddleware(thunk.withExtraArgument({
+                    getFirebase, getFirestore
+               }
+               )
+               ), reduxFirestore(firebaseConfig)
+          )
+     );
 };
 export const wrapper = createWrapper(newStore, { debug: true });
