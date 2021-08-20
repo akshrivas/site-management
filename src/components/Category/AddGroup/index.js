@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -19,6 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { urlConstants } from 'src/config';
+import useUid from 'src/utils/useUid';
 
 const styles = (theme) => ({
     root: {
@@ -70,7 +70,7 @@ export default function AddGroup({
         description: '',
         active: true
     });
-    const uid = useSelector((state) => state.firebase.auth.uid);
+    const uid = useUid();
     const validationSchema = yup.object({
         name: yup
             .string()

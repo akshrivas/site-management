@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
+import useUid from 'src/utils/useUid';
 
 const useGroups = (activeCategory) => {
-  const uid = useSelector((state) => state.firebase.auth.uid);
+  const uid = useUid();
   let firestoreObj = {
     collection: 'users'
   }
