@@ -30,9 +30,8 @@ import { mdiPencilOutline } from '@mdi/js'
 import { mdiCartOutline } from '@mdi/js'
 import { mdiDeleteOutline } from '@mdi/js'
 import AddProducts from 'src/components/AddProducts';
-import { urlConstants } from '../../../config';
-import { useSelector } from 'react-redux';
-import { useFirestoreConnect } from 'react-redux-firebase';
+
+import useGroups from './useGroups';
 
 
 const useRowStyles = makeStyles({
@@ -209,29 +208,7 @@ const rows = [
 ];
 
 export default function GroupList({ activeCategory }) {
-  let firestoreObj = {
-    collection: 'users'
-  }
-  if(activeCategory){
-    firestoreObj = {
-      collection: 'users',
-      doc: 'dQ5UsfoCpYVed1NjeAJOXqx9lNt1',
-      subcollections: [
-        {
-          collection: 'categories',
-          doc: activeCategory ? activeCategory.id : '',
-        },
-        {
-          collection: 'groups'
-        }
-      ],
-      storeAs: 'groups'
-    }
-  }
-  useFirestoreConnect([
-    {...firestoreObj}
-  ])
-  const groups = useSelector(state => state.firestore.ordered.groups || [])
+  const groups = useGroups(activeCategory);
   return (
     <TableContainer component={Paper}>
       {
