@@ -56,8 +56,8 @@ export default function Category() {
               <Paper component="form" className={classes.categorySearch}>
                 <InputBase
                   className={classes.input}
-                  placeholder="Search Google Maps"
-                  inputProps={{ 'aria-label': 'search google maps' }}
+                  placeholder="Search Categories..."
+                  inputProps={{ 'aria-label': 'search categories' }}
                 />
                 <IconButton type="submit" className={classes.iconButton} aria-label="search">
                   <SearchIcon />
