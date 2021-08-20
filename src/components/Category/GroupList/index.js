@@ -201,12 +201,6 @@ Row.propTypes = {
   }).isRequired,
 };
 
-const rows = [
-  createData('Vegetables', 1, "All Fresh products", 24,),
-  createData('Fruits', 4, "All Fresh products", 24,),
-
-];
-
 export default function GroupList({ activeCategory }) {
   const groups = useGroups(activeCategory);
   return (
@@ -226,7 +220,7 @@ export default function GroupList({ activeCategory }) {
             </TableHead>
             <TableBody>
               {groups.map((row) => (
-                <Row key={row.name} row={row} />
+                <Row key={row.id} row={row} />
               ))}
             </TableBody>
           </Table>
