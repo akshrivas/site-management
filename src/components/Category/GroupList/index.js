@@ -17,10 +17,6 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
@@ -32,6 +28,7 @@ import { mdiDeleteOutline } from '@mdi/js'
 import AddProducts from 'src/components/AddProducts';
 
 import useGroups from './useGroups';
+import ProductsList from '../ProductsList';
 
 
 const useRowStyles = makeStyles({
@@ -94,74 +91,20 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
         <TableCell>{row.description}</TableCell>
-        <TableCell align="center">{row.carbs}</TableCell>
-        {/* <TableCell align="right">{row.protein}</TableCell> */}
-      </TableRow>
-      {/* <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Products
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell>Added date</TableCell>
-                    <TableCell align="right">Units</TableCell>
-                    <TableCell>Decryption</TableCell>
-                    <TableCell align="right">Original Price</TableCell>
-                    <TableCell align="right">Discount(%)</TableCell>
-                    <TableCell align="right">Price</TableCell>
-                    <TableCell>SKU</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell>
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                      <TableCell align="right">{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.customerId}</TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell>
-                        <Icon onClick={handleClickOpen} path={mdiPencilOutline}
-                        title="User Profile"
-                        size={1}
-                        color="#434242"
-                        style={{marginRight: 5}}
-                        />
-                        <Icon path={mdiCartOutline}
-                        title="User Profile"
-                        size={1}
-                        color="#434242"
-                        style={{marginRight: 5}}
-                        />
-                        <Icon path={mdiDeleteOutline}
-                        title="User Profile"
-                        size={1}
-                        color="#434242"
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
+        <TableCell align="right">
+            <Button autoFocus color="inherit" onClick={handleClose} size="small">
+              Add Product
+            </Button>
+            <Button autoFocus color="inherit" onClick={handleClose} size="small">
+              Edit
+            </Button>
+            <Button autoFocus color="inherit" onClick={handleClose} size="small">
+              Delete
+            </Button>
         </TableCell>
-      </TableRow> */}
+      </TableRow>
+      <ProductsList row={row} open={open} handleClickOpen={handleClickOpen} />
       <Dialog fullScreen open={dialogs} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
@@ -182,25 +125,6 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
-};
-
 export default function GroupList({ activeCategory }) {
   const groups = useGroups(activeCategory);
   return (
@@ -212,10 +136,8 @@ export default function GroupList({ activeCategory }) {
               <TableRow>
                 <TableCell />
                 <TableCell>Group</TableCell>
-                <TableCell align="right">No. of Products</TableCell>
                 <TableCell>Description</TableCell>
-                <TableCell align="center">Action</TableCell>
-                {/* <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
+                <TableCell align="right">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
