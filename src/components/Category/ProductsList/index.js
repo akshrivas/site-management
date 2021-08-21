@@ -55,22 +55,27 @@ export default function ProductsList({ row, open, handleClickOpen }) {
                                         <TableCell align="right">{historyRow.customerId}</TableCell>
                                         <TableCell>{historyRow.customerId}</TableCell>
                                         <TableCell>
-                                            <Icon onClick={handleClickOpen} path={mdiPencilOutline}
-                                                title="User Profile"
+                                            <Icon
+                                                onClick={handleClickOpen}
+                                                path={mdiPencilOutline}
+                                                title="Edit Product"
                                                 size={1}
                                                 color="#434242"
-                                                style={{ marginRight: 5 }}
+                                                style={{ marginRight: 5, cursor: 'pointer' }}
                                             />
-                                            <Icon path={mdiCartOutline}
-                                                title="User Profile"
+                                            <Icon
+                                                path={mdiCartOutline}
+                                                title="Add to cart"
                                                 size={1}
                                                 color="#434242"
-                                                style={{ marginRight: 5 }}
+                                                style={{ marginRight: 5, cursor: 'pointer' }}
                                             />
-                                            <Icon path={mdiDeleteOutline}
-                                                title="User Profile"
+                                            <Icon
+                                                path={mdiDeleteOutline}
+                                                title="Delete product"
                                                 size={1}
                                                 color="#434242"
+                                                style={{ cursor: 'pointer' }}
                                             />
                                         </TableCell>
                                     </TableRow>
