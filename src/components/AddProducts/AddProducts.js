@@ -162,13 +162,13 @@ export default function AddProducts({
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Add Products
+            {activeProduct ? 'Edit Product' : 'Add Product'}
           </Typography>
           <Button autoFocus color="inherit" onClick={formik.handleSubmit}>
             {
               saving ?
                 <CircularProgress color="white" style={{ height: '20px', width: '20px' }} />
-                : 'Save'
+                : activeProduct ? 'Update' : 'Save'
             }
           </Button>
         </Toolbar>
