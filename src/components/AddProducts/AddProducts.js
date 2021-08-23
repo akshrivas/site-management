@@ -104,6 +104,7 @@ export default function AddProducts({
         groupId
       }).then(() => {
         setSaving(false);
+        formik.setValues({ ...product }, false);
         handleClose()
       }).catch((err) => {
         setSaving(false);
@@ -121,6 +122,7 @@ export default function AddProducts({
       }).then((response) => {
         setSaving(false);
         if (response.data.id) {
+          formik.setValues({ ...product }, false);
           handleClose()
         }
         else {

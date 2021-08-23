@@ -103,6 +103,7 @@ export default function AddGroup({
                 categoryId
             }).then(() => {
                 setSaving(false);
+                formik.setValues({ ...group }, false);
                 handleClose();
             }).catch((err) => {
                 console.log(err);
@@ -110,7 +111,7 @@ export default function AddGroup({
             })
         }
         else {
-            axios.post(urlConstants.addGroup, {
+            axios.post(urlConstants.groupOps, {
                 data: {
                     group: values,
                     userId: uid,
@@ -119,6 +120,7 @@ export default function AddGroup({
             }).then((response) => {
                 if (response.data.id) {
                     setSaving(false);
+                    formik.setValues({ ...group }, false);
                     handleClose()
                 }
                 else {

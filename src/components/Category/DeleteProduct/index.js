@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -6,10 +6,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import useUid from 'src/utils/useUid';
-import { urlConstants } from  'src/config';
+import { urlConstants } from 'src/config';
 
 export default function DeleteCategory({
     activeProduct,
@@ -19,9 +20,11 @@ export default function DeleteCategory({
     open
 }) {
     const theme = useTheme();
+    const [loading, setLoading] = useState(false);
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const uid = useUid();
     const handleClick = () => {
+        setLoading(true);
         axios.delete(`${urlConstants.productOps}/${activeProduct.id}`, {
             data: {
                 userId: uid,
@@ -29,9 +32,11 @@ export default function DeleteCategory({
                 groupId
             }
         }).then(() => {
+            setLoading(false);
             handleClose();
         }).catch((err) => {
             console.log(err);
+            setLoading(false);
         })
     }
     return (
@@ -52,7 +57,11 @@ export default function DeleteCategory({
                     Cancel
                 </Button>
                 <Button onClick={handleClick} color="primary" autoFocus>
-                    Yes
+                    {
+                        loading ?
+                            <CircularProgress style={{ height: '20px', width: '20px' }} />
+                            : 'Yes'
+                    }
                 </Button>
             </DialogActions>
         </Dialog>

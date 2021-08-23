@@ -112,7 +112,7 @@ export default function AddCategory({
             })
         }
         else {
-            axios.post(urlConstants.addCategory, {
+            axios.post(urlConstants.categoryOps, {
                 data: {
                     category: values,
                     userId: uid
