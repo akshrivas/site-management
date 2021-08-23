@@ -7,13 +7,22 @@
     "@material-ui/icons": "^4.11.2",
     "@mdi/js": "^5.9.55",
     "@mdi/react": "^1.5.0",
+    "axios": "^0.21.1",
     "clsx": "latest",
     "firebase": "^8.9.1",
+    "firebase-admin": "^9.11.0",
     "formik": "^2.2.9",
+    "moment": "^2.29.1",
     "next": "latest",
+    "next-redux-wrapper": "^7.0.2",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-redux": "^7.2.4",
+    "react-redux-firebase": "^3.10.0",
+    "redux": "^4.1.1",
+    "redux-firestore": "^0.15.0",
+    "redux-thunk": "^2.3.0",
     "yup": "^0.32.9"
   },
   "babel": {
@@ -30,6 +39,7 @@
   },
   "devDependencies": {
     "eslint": "^7.30.0",
-    "eslint-config-next": "^11.0.1"
+    "eslint-config-next": "^11.0.1",
+    "redux-devtools-extension": "^2.13.9"
   }
 }

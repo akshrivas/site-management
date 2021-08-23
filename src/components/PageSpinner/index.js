@@ -1,17 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Backdrop from '@material-ui/core/Backdrop'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 export default function PageSpinner() {
+    const [open, setOpen] = useState(true)
     return (
-        <div style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
-            <CircularProgress />
-        </div>
+        <Backdrop open={open} onClick={() => setOpen(false)}>
+            <CircularProgress color="inherit" />
+        </Backdrop>
     )
 }
