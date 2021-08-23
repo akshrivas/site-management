@@ -30,7 +30,7 @@ const useProducts = (activeGroup, categoryId) => {
     useFirestoreConnect([
         { ...firestoreObj }
     ])
-    return useSelector(state => state.firestore.ordered[`products-${activeGroup.id}`] || [])
+    return useSelector(state => state.firestore.ordered[activeGroup ? `products-${activeGroup.id}` : 'products'] || [])
 };
 
 export default useProducts;
