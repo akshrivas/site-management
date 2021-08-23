@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import axios from 'axios';
@@ -34,11 +34,13 @@ export default function AddProducts({
   dialogs,
   handleClose,
   categoryId,
-  groupId
+  groupId,
+  activeProduct
 }) {
   const classes = useStyles();
   const uid = useUid();
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [product, setProduct] = useState({
     name: '',
     subtitle: '',
@@ -51,6 +53,14 @@ export default function AddProducts({
     image: '',
     visible: 'show'
   });
+  useEffect(() => {
+    if(activeProduct){
+      formik.setValues({...activeProduct}, false);
+    }
+    else{
+      formik.setValues({...product}, false);
+    }
+  }, [dialogs])
   const validationSchema = yup.object({
     name: yup
       .string()
@@ -85,22 +95,25 @@ export default function AddProducts({
   });
   const handleSubmit = (values) => {
     console.log(`submitted with ${JSON.stringify(values)}`);
+    setSaving(true);
     axios.post(urlConstants.productOps, {
-        data: {
-            product: values,
-            userId: uid,
-            categoryId,
-            groupId
-        }
+      data: {
+        product: values,
+        userId: uid,
+        categoryId,
+        groupId
+      }
     }).then((response) => {
-        if(response.data.id){
-            handleClose()
-        }
-        else{
-            console.log(response)
-        }
+      setSaving(false);
+      if (response.data.id) {
+        handleClose()
+      }
+      else {
+        console.log(response)
+      }
     }).catch((err) => {
-        console.log(err)
+      setSaving(false);
+      console.log(err)
     })
   }
   const handleUpload = (e) => {
@@ -136,7 +149,11 @@ export default function AddProducts({
             Add Products
           </Typography>
           <Button autoFocus color="inherit" onClick={formik.handleSubmit}>
-            Save
+            {
+              saving ?
+                <CircularProgress color="white" style={{ height: '20px', width: '20px' }} />
+                : 'Save'
+            }
           </Button>
         </Toolbar>
       </AppBar>
@@ -235,15 +252,15 @@ export default function AddProducts({
               <Grid container>
                 <Card className={classes.placeholder}>
                   {
-                    loading?
-                    <div className={classes.mediaDiv}>
-                      <CircularProgress />
-                    </div>
-                    : <CardMedia
-                    className={classes.media}
-                    image={formik.values.image ? formik.values.image : "https://archive.org/download/no-photo-available/no-photo-available.png"}
-                    title="Contemplative Reptile"
-                  /> 
+                    loading ?
+                      <div className={classes.mediaDiv}>
+                        <CircularProgress />
+                      </div>
+                      : <CardMedia
+                        className={classes.media}
+                        image={formik.values.image ? formik.values.image : "https://archive.org/download/no-photo-available/no-photo-available.png"}
+                        title="Contemplative Reptile"
+                      />
                   }
                   <div style={{ padding: '10px', textAlign: 'center' }}>
                     <FormControl component="fieldset" id="image-input" error={formik.touched.image && formik.errors.image}>

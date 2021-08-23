@@ -34,16 +34,24 @@ const useRowStyles = makeStyles({
 
 function Row(props) {
   const { row, categoryId } = props;
-  const [open, setOpen] = React.useState(false);
-  const [dialogs, setDialogs] = React.useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [dialogs, setDialogs] = useState(false);
+  const [activeProduct, setActiveProduct] = useState(null);
   const handleClickOpen = () => {
     setDialogs(true);
   };
 
   const handleClose = () => {
     setDialogs(false);
+    setActiveProduct(null);
   };
+
+  const handleAction = (action, item) => {
+    setActiveProduct({ ...item });
+    if (action === 'edit') {
+      handleClickOpen();
+    }
+  }
 
   const classes = useRowStyles();
 
@@ -60,19 +68,23 @@ function Row(props) {
         </TableCell>
         <TableCell>{row.description}</TableCell>
         <TableCell align="right">
-            <Button autoFocus color="inherit" onClick={handleClickOpen} size="small">
-              Add Product
-            </Button>
-            <Button autoFocus color="inherit" onClick={handleClose} size="small">
-              Edit
-            </Button>
-            <Button autoFocus color="inherit" onClick={handleClose} size="small">
-              Delete
-            </Button>
+          <Button autoFocus color="inherit" onClick={handleClickOpen} size="small">
+            Add Product
+          </Button>
+          <Button autoFocus color="inherit" onClick={handleClose} size="small">
+            Edit
+          </Button>
+          <Button autoFocus color="inherit" onClick={handleClose} size="small">
+            Delete
+          </Button>
         </TableCell>
       </TableRow>
-      <ProductsList row={row} open={open} handleClickOpen={handleClickOpen} categoryId={categoryId} />
-      <AddProducts handleClose={handleClose} dialogs={dialogs} categoryId={categoryId} groupId={row.id} />
+      <ProductsList row={row} open={open} handleClickOpen={handleClickOpen} categoryId={categoryId}
+        handleAction={handleAction}
+      />
+      <AddProducts handleClose={handleClose} dialogs={dialogs} categoryId={categoryId} groupId={row.id}
+        activeProduct={activeProduct}
+      />
     </React.Fragment>
   );
 }
@@ -99,8 +111,8 @@ export default function GroupList({ activeCategory }) {
             </TableBody>
           </Table>
           : <div style={{ textAlign: 'center', padding: '20px' }}>
-          No Groups Created
-      </div>
+            No Groups Created
+          </div>
       }
     </TableContainer>
   );

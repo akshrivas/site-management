@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
 import Table from '@material-ui/core/Table';
@@ -14,7 +15,7 @@ import { mdiCartOutline } from '@mdi/js';
 import { mdiDeleteOutline } from '@mdi/js';
 import useProducts from './useProducts';
 
-export default function ProductsList({ row, open, handleClickOpen, categoryId }) {
+export default function ProductsList({ row, open, handleClickOpen, categoryId, handleAction }) {
     const products = useProducts(row, categoryId);
     return (
         <TableRow>
@@ -46,7 +47,7 @@ export default function ProductsList({ row, open, handleClickOpen, categoryId })
                                                 <TableCell component="th" scope="row">
                                                     {product.name}
                                                 </TableCell>
-                                                <TableCell>{product.created}</TableCell>
+                                                <TableCell>{moment(product.created).format('DD-MM-YYYY')}</TableCell>
                                                 <TableCell align="right">{product.units}</TableCell>
                                                 <TableCell>
                                                     {product.description}
@@ -57,7 +58,7 @@ export default function ProductsList({ row, open, handleClickOpen, categoryId })
                                                 <TableCell>{product.sku}</TableCell>
                                                 <TableCell>
                                                     <Icon
-                                                        onClick={handleClickOpen}
+                                                        onClick={() => handleAction('edit', product)}
                                                         path={mdiPencilOutline}
                                                         title="Edit Product"
                                                         size={1}
@@ -72,6 +73,7 @@ export default function ProductsList({ row, open, handleClickOpen, categoryId })
                                                         style={{ marginRight: 5, cursor: 'pointer' }}
                                                     />
                                                     <Icon
+                                                        onClick={() => handleAction('edit', product)}
                                                         path={mdiDeleteOutline}
                                                         title="Delete product"
                                                         size={1}
