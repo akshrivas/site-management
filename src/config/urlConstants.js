@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3002'
+const baseUrl = process.env.NODE_ENV == 'production' ? process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3002'
 
 const urlConstants = {
     addCategory: `${baseUrl}/api/categories`,
