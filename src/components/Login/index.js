@@ -45,28 +45,28 @@ export default function Login() {
       .email('Enter a valid email.')
       .required('This field is required.'),
     password: yup
-    .string()
-    .required('This field is required.')
+      .string()
+      .required('This field is required.')
   });
   const { signInWithEmailAndPassword } = useAuth();
   const handleSubmit = (values) => {
     console.log(`submitted with ${JSON.stringify(values)}`);
     setError(null)
     signInWithEmailAndPassword(values.email, values.password)
-    .then(authUser => {
-      console.log(authUser)
-      router.push('/dashboard');
-    })
-    .catch(error => {
-      console.log(error)
-      setError(error.message)
-    });
+      .then(authUser => {
+        console.log(authUser)
+        router.push('/dashboard');
+      })
+      .catch(error => {
+        console.log(error)
+        setError(error.message)
+      });
   }
   const formik = useFormik({
     initialValues: { ...user },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-        handleSubmit(values);
+      handleSubmit(values);
     },
   });
   return (
