@@ -20,13 +20,13 @@ const useGroups = (activeCategory) => {
           collection: 'groups'
         }
       ],
-      storeAs: 'groups'
+      storeAs: `groups-${activeCategory.id}`
     }
   }
   useFirestoreConnect([
     {...firestoreObj}
   ])
-  return useSelector(state => state.firestore.ordered.groups || [])
+  return useSelector(state => state.firestore.ordered[`groups-${activeCategory.id}`] || [])
 };
 
 export default useGroups;

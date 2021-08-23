@@ -13,6 +13,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Button from '@material-ui/core/Button';
 import AddProducts from 'src/components/AddProducts';
+import DeleteProduct from '../DeleteProduct';
 
 import useGroups from './useGroups';
 import ProductsList from '../ProductsList';
@@ -33,10 +34,11 @@ const useRowStyles = makeStyles({
 });
 
 function Row(props) {
-  const { row, categoryId } = props;
+  const { row, categoryId, handleClick } = props;
   const [open, setOpen] = useState(false);
   const [dialogs, setDialogs] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const handleClickOpen = () => {
     setDialogs(true);
   };
@@ -50,6 +52,9 @@ function Row(props) {
     setActiveProduct({ ...item });
     if (action === 'edit') {
       handleClickOpen();
+    }
+    else {
+      setDeleteOpen(true);
     }
   }
 
@@ -71,10 +76,10 @@ function Row(props) {
           <Button autoFocus color="inherit" onClick={handleClickOpen} size="small">
             Add Product
           </Button>
-          <Button autoFocus color="inherit" onClick={handleClose} size="small">
+          <Button autoFocus color="inherit" onClick={() => handleClick('edit', row)} size="small">
             Edit
           </Button>
-          <Button autoFocus color="inherit" onClick={handleClose} size="small">
+          <Button autoFocus color="inherit" onClick={() => handleClick('delete', row)} size="small">
             Delete
           </Button>
         </TableCell>
@@ -85,11 +90,15 @@ function Row(props) {
       <AddProducts handleClose={handleClose} dialogs={dialogs} categoryId={categoryId} groupId={row.id}
         activeProduct={activeProduct}
       />
+      <DeleteProduct open={deleteOpen} handleClose={() => setDeleteOpen(false)}
+        categoryId={categoryId} groupId={row.id}
+        activeProduct={activeProduct}
+      />
     </React.Fragment>
   );
 }
 
-export default function GroupList({ activeCategory }) {
+export default function GroupList({ activeCategory, handleAction }) {
   const groups = useGroups(activeCategory);
   return (
     <TableContainer component={Paper}>
@@ -106,7 +115,7 @@ export default function GroupList({ activeCategory }) {
             </TableHead>
             <TableBody>
               {groups.map((row) => (
-                <Row key={row.id} row={row} categoryId={activeCategory.id} />
+                <Row key={row.id} row={row} categoryId={activeCategory.id} handleClick={handleAction} />
               ))}
             </TableBody>
           </Table>

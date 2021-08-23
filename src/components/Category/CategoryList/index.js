@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function categoryList({ categories, setActiveCategory }) {
+export default function CategoryList({ categories, setActiveCategory }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
 
   const classes = useStyles();

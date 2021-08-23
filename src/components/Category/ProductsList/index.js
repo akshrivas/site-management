@@ -15,7 +15,7 @@ import { mdiCartOutline } from '@mdi/js';
 import { mdiDeleteOutline } from '@mdi/js';
 import useProducts from './useProducts';
 
-export default function ProductsList({ row, open, handleClickOpen, categoryId, handleAction }) {
+export default function ProductsList({ row, open, categoryId, handleAction }) {
     const products = useProducts(row, categoryId);
     return (
         <TableRow>
@@ -65,15 +65,15 @@ export default function ProductsList({ row, open, handleClickOpen, categoryId, h
                                                         color="#434242"
                                                         style={{ marginRight: 5, cursor: 'pointer' }}
                                                     />
-                                                    <Icon
+                                                    {/* <Icon
                                                         path={mdiCartOutline}
                                                         title="Add to cart"
                                                         size={1}
                                                         color="#434242"
                                                         style={{ marginRight: 5, cursor: 'pointer' }}
-                                                    />
+                                                    /> */}
                                                     <Icon
-                                                        onClick={() => handleAction('edit', product)}
+                                                        onClick={() => handleAction('delete', product)}
                                                         path={mdiDeleteOutline}
                                                         title="Delete product"
                                                         size={1}

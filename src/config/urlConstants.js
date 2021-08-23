@@ -4,7 +4,8 @@ const urlConstants = {
     addCategory: `${baseUrl}/api/categories`,
     addGroup: `${baseUrl}/api/groups`,
     categoryOps: `${baseUrl}/api/categories`,
-    productOps: `${baseUrl}/api/products`
+    productOps: `${baseUrl}/api/products`,
+    groupOps: `${baseUrl}/api/groups`
 }
 
 export default urlConstants

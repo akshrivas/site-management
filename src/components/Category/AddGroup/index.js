@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -63,13 +63,22 @@ const DialogActions = withStyles((theme) => ({
 export default function AddGroup({
     handleClose,
     open,
-    categoryId
+    categoryId,
+    activeGroup
 }) {
     const [group, setGroup] = useState({
         name: '',
         description: '',
         active: true
     });
+    useEffect(() => {
+        if (activeGroup) {
+            formik.setValues({ ...activeGroup }, false);
+        }
+        else {
+            formik.setValues({ ...group }, false);
+        }
+    }, [open])
     const uid = useUid();
     const validationSchema = yup.object({
         name: yup
@@ -84,22 +93,35 @@ export default function AddGroup({
     });
     const handleSubmit = (values) => {
         console.log(`submitted with ${JSON.stringify(values)}`);
-        axios.post(urlConstants.addGroup, {
-            data: {
+        if (activeGroup) {
+            axios.put(`${urlConstants.groupOps}/${activeGroup.id}`, {
                 group: values,
                 userId: uid,
                 categoryId
-            }
-        }).then((response) => {
-            if(response.data.id){
-                handleClose()
-            }
-            else{
-                console.log(response)
-            }
-        }).catch((err) => {
-            console.log(err)
-        })
+            }).then(() => {
+                handleClose();
+            }).catch((err) => {
+                console.log(err);
+            })
+        }
+        else {
+            axios.post(urlConstants.addGroup, {
+                data: {
+                    group: values,
+                    userId: uid,
+                    categoryId
+                }
+            }).then((response) => {
+                if (response.data.id) {
+                    handleClose()
+                }
+                else {
+                    console.log(response)
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
     }
     const formik = useFormik({
         initialValues: { ...group },
@@ -118,25 +140,25 @@ export default function AddGroup({
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TextField label="Group Name" variant="outlined"
-                            id="name"
-                            name="name"
-                            value={formik.values.name}
-                            onChange={formik.handleChange}
-                            error={formik.touched.name && formik.errors.name}
-                            helperText={formik.touched.name && formik.errors.name}
+                                id="name"
+                                name="name"
+                                value={formik.values.name}
+                                onChange={formik.handleChange}
+                                error={formik.touched.name && formik.errors.name}
+                                helperText={formik.touched.name && formik.errors.name}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl component="fieldset" id="active" error={formik.touched.active && formik.errors.active}>
-                            <FormControlLabel
-                                control={<Switch size="small" checked={formik.values.active} onChange={formik.handleChange} />}
-                                label="Active"
-                            />
+                                <FormControlLabel
+                                    control={<Switch size="small" checked={formik.values.active} onChange={formik.handleChange} />}
+                                    label="Active"
+                                />
                                 <FormHelperText id="my-helper-text">{formik.touched.active && formik.errors.active}</FormHelperText>
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField label="Description" variant="outlined" 
+                            <TextField label="Description" variant="outlined"
                                 id="description"
                                 name="description"
                                 value={formik.values.description}

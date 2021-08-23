@@ -15,6 +15,7 @@ import AddCategory from './AddCategory';
 import AddGroup from './AddGroup';
 import useCategories from './useCategories';
 import DeleteCategory from './DeleteCategory';
+import DeleteGroup from './DeleteGroup';
 
 export default function Category() {
   const classes = useStyles();
@@ -23,7 +24,9 @@ export default function Category() {
   const [open, setOpen] = useState(false);
   const [groupOpen, setGroupOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteGroup, setDeleteGroup] = useState(false);
   const [mode, setMode] = useState(null);
+  const [activeGroup, setActiveGroup] = useState(null);
   useEffect(() => {
     if (categories && categories.length) {
       setActiveCategory(categories[0])
@@ -40,9 +43,17 @@ export default function Category() {
   const handleGroupClose = () => {
     setGroupOpen(false);
   }
-
   const handleGroupOpen = () => {
     setGroupOpen(true);
+  }
+  const handleAction = (action, group) => {
+    setActiveGroup({ ...group });
+    if (action === 'edit') {
+      setGroupOpen(true);
+    }
+    else{
+      setDeleteGroup(true);
+    }
   }
   return (
     <>
@@ -113,13 +124,22 @@ export default function Category() {
               </Grid>
             </Paper>
             <div style={{ marginTop: '10px' }}>
-              <GroupList activeCategory={activeCategory} />
+              <GroupList activeCategory={activeCategory} handleAction={handleAction} />
             </div>
           </Grid>
         </Grid>
         <AddCategory open={open} handleClose={handleClose} activeCategory={mode == 'edit' ? activeCategory : null} />
         <DeleteCategory open={deleteOpen} handleClose={() => setDeleteOpen(false)} categoryId={activeCategory ? activeCategory.id : ''} />
-        <AddGroup open={groupOpen} handleClose={handleGroupClose} categoryId={activeCategory ? activeCategory.id : ''} />
+        <AddGroup open={groupOpen} handleClose={handleGroupClose}
+          categoryId={activeCategory ? activeCategory.id : ''}
+          activeGroup={activeGroup}
+        />
+        <DeleteGroup
+          open={deleteGroup}
+          handleClose={() => setDeleteGroup(false)}
+          categoryId={activeCategory ? activeCategory.id : ''}
+          groupId={activeGroup ? activeGroup.id : ''}
+        />
       </div>
     </>
   );
