@@ -16,6 +16,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { urlConstants } from 'src/config';
 import useUid from 'src/utils/useUid';
@@ -71,6 +72,7 @@ export default function AddGroup({
         description: '',
         active: true
     });
+    const [saving, setSaving] = useState(false);
     useEffect(() => {
         if (activeGroup) {
             formik.setValues({ ...activeGroup }, false);
@@ -93,15 +95,18 @@ export default function AddGroup({
     });
     const handleSubmit = (values) => {
         console.log(`submitted with ${JSON.stringify(values)}`);
+        setSaving(true);
         if (activeGroup) {
             axios.put(`${urlConstants.groupOps}/${activeGroup.id}`, {
                 group: values,
                 userId: uid,
                 categoryId
             }).then(() => {
+                setSaving(false);
                 handleClose();
             }).catch((err) => {
                 console.log(err);
+                setSaving(false);
             })
         }
         else {
@@ -113,13 +118,16 @@ export default function AddGroup({
                 }
             }).then((response) => {
                 if (response.data.id) {
+                    setSaving(false);
                     handleClose()
                 }
                 else {
                     console.log(response)
+                    setSaving(false);
                 }
             }).catch((err) => {
                 console.log(err)
+                setSaving(false);
             })
         }
     }
@@ -133,7 +141,7 @@ export default function AddGroup({
     return (
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
             <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                Create Group
+                {activeGroup ? 'Edit Group' : 'Create Group'}
             </DialogTitle>
             <DialogContent dividers>
                 <form onSubmit={formik.handleSubmit}>
@@ -173,7 +181,11 @@ export default function AddGroup({
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={formik.handleSubmit} color="primary" type="submit">
-                    Create
+                    {
+                        saving ?
+                            <CircularProgress style={{ height: '20px', width: '20px' }} />
+                            : activeGroup ? 'Update' : 'Save'
+                    }
                 </Button>
             </DialogActions>
         </Dialog>

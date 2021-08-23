@@ -18,6 +18,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { urlConstants } from 'src/config';
@@ -73,11 +74,12 @@ export default function AddCategory({
         description: '',
         visible: 'show'
     });
+    const [saving, setSaving] = useState(false);
     useEffect(() => {
-        if(activeCategory){
-            formik.setValues({...activeCategory}, false);
+        if (activeCategory) {
+            formik.setValues({ ...activeCategory }, false);
         }
-        else{
+        else {
             formik.setValues({ ...category }, false);
         }
     }, [activeCategory])
@@ -95,41 +97,38 @@ export default function AddCategory({
     });
     const handleSubmit = (values) => {
         console.log(`submitted with ${JSON.stringify(values)}`);
-        if(activeCategory){
+        setSaving(true);
+        if (activeCategory) {
             axios.put(`${urlConstants.categoryOps}/${activeCategory.id}`, {
-                    category: values,
-                    userId: uid
+                category: values,
+                userId: uid
             }).then(() => {
-                    handleClose()
-                    formik.setValues({
-                        name: '',
-                        description: '',
-                        visible: 'show'
-                    });
+                setSaving(false);
+                handleClose()
+                formik.setValues({ ...category }, false);
             }).catch((err) => {
                 console.log(err)
-            }) 
+                setSaving(false);
+            })
         }
-        else{
+        else {
             axios.post(urlConstants.addCategory, {
                 data: {
                     category: values,
                     userId: uid
                 }
             }).then((response) => {
-                if(response.data.id){
+                if (response.data.id) {
+                    setSaving(false);
                     handleClose()
-                    formik.setValues({
-                        name: '',
-                        description: '',
-                        visible: 'show'
-                    }, false);
+                    formik.setValues({ ...category }, false);
                 }
-                else{
+                else {
                     console.log(response)
                 }
             }).catch((err) => {
                 console.log(err)
+                setSaving(false);
             })
         }
     }
@@ -143,19 +142,19 @@ export default function AddCategory({
     return (
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
             <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                Create Category
+                {activeCategory ? 'Edit Category' : 'Create Category'}
             </DialogTitle>
             <DialogContent dividers>
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TextField label="Category Name" variant="outlined"
-                            id="name"
-                            name="name"
-                            value={formik.values.name}
-                            onChange={formik.handleChange}
-                            error={formik.touched.name && formik.errors.name}
-                            helperText={formik.touched.name && formik.errors.name}
+                                id="name"
+                                name="name"
+                                value={formik.values.name}
+                                onChange={formik.handleChange}
+                                error={formik.touched.name && formik.errors.name}
+                                helperText={formik.touched.name && formik.errors.name}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -170,7 +169,7 @@ export default function AddCategory({
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField label="Description" variant="outlined" 
+                            <TextField label="Description" variant="outlined"
                                 id="description"
                                 name="description"
                                 value={formik.values.description}
@@ -185,7 +184,11 @@ export default function AddCategory({
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={formik.handleSubmit} color="primary" type="submit">
-                    {activeCategory ? 'Update' : 'Create'}
+                    {
+                        saving ?
+                            <CircularProgress style={{ height: '20px', width: '20px' }} />
+                            : activeCategory ? 'Update' : 'Save'
+                    }
                 </Button>
             </DialogActions>
         </Dialog>
