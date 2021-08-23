@@ -10,7 +10,6 @@ const UserProvider = ({ children }) => {
   // Listen for changes on loading and authUser, redirect if needed
   useEffect(() => {
     if (!loading && !authUser){
-      localStorage.setItem('authUser', JSON.stringify(authUser))
       router.push('/login')
     }
   }, [authUser, loading])

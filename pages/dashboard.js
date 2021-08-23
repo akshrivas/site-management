@@ -14,20 +14,4 @@ const Dashboard = () => {
   );
 };
 
-// export async function getServerSideProps() {
-//   let userId = `dQ5UsfoCpYVed1NjeAJOXqx9lNt1`;
-//   const res = await axios.get(`http://localhost:3002/api/users/${userId}`)
-//   const { data } = res;
-
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     }
-//   }
-
-//   return {
-//     props: { data }, // will be passed to the page component as props
-//   }
-// }
-
 export default Dashboard;
