@@ -54,11 +54,11 @@ export default function AddProducts({
     visible: 'show'
   });
   useEffect(() => {
-    if(activeProduct){
-      formik.setValues({...activeProduct}, false);
+    if (activeProduct) {
+      formik.setValues({ ...activeProduct }, false);
     }
-    else{
-      formik.setValues({...product}, false);
+    else {
+      formik.setValues({ ...product }, false);
     }
   }, [dialogs])
   const validationSchema = yup.object({
@@ -96,25 +96,41 @@ export default function AddProducts({
   const handleSubmit = (values) => {
     console.log(`submitted with ${JSON.stringify(values)}`);
     setSaving(true);
-    axios.post(urlConstants.productOps, {
-      data: {
+    if (activeProduct) {
+      axios.put(`${urlConstants.productOps}/${activeProduct.id}`, {
         product: values,
         userId: uid,
         categoryId,
         groupId
-      }
-    }).then((response) => {
-      setSaving(false);
-      if (response.data.id) {
+      }).then(() => {
+        setSaving(false);
         handleClose()
-      }
-      else {
-        console.log(response)
-      }
-    }).catch((err) => {
-      setSaving(false);
-      console.log(err)
-    })
+      }).catch((err) => {
+        setSaving(false);
+        console.log(err)
+      })
+    }
+    else {
+      axios.post(urlConstants.productOps, {
+        data: {
+          product: values,
+          userId: uid,
+          categoryId,
+          groupId
+        }
+      }).then((response) => {
+        setSaving(false);
+        if (response.data.id) {
+          handleClose()
+        }
+        else {
+          console.log(response)
+        }
+      }).catch((err) => {
+        setSaving(false);
+        console.log(err)
+      })
+    }
   }
   const handleUpload = (e) => {
     e.preventDefault();
