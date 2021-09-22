@@ -5,21 +5,24 @@ export default async (request, response) => {
   if(data){
     try {
       let { userId, categoryId, groupId, product } = data;
-      const productsDoc = await db.collection(`users/${userId}/categories/${categoryId}/groups/${groupId}/items`).get();
-      const products = productsDoc.docs.map(product => ({
-        id: product.id,
-        ...product.data()
-      }));
-      if(products.some((item) => item.name == product.name)){
-        res.status(400).end();
-      }
-      else{
-        const { id } = await db.collection(`users/${userId}/categories/${categoryId}/groups/${groupId}/items`).add({
+      // const productsDoc = await db.collection(`products`).get();
+      // const products = productsDoc.docs.map(product => ({
+      //   id: product.id,
+      //   ...product.data()
+      // }));
+      // if(products.some((item) => item.name == product.name)){
+      //   console.log('product already existings')
+      // }
+      // else{
+        const { id } = await db.collection(`products`).add({
           ...product,
+          groupId,
+          categoryId,
+          userId,
           created: new Date().toISOString(),
         });
         response.status(200).json({ id, message: 'success' });
-      }
+      // }
     } catch (e) {
       response.status(400).end();
     }

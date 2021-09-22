@@ -12,6 +12,7 @@
     "firebase": "^8.9.1",
     "firebase-admin": "^9.11.0",
     "formik": "^2.2.9",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "next": "latest",
     "next-redux-wrapper": "^7.0.2",

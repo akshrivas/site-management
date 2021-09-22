@@ -37,6 +37,15 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  groupMedia: {
+    height: 100,
+  },
+  groupMediaDiv:{
+    height: 100,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   input: {
     display: 'none'
   },

@@ -5,12 +5,15 @@ export default async (req, res) => {
     const { userId, categoryId, groupId, product } = req.body;
     try {
         if (req.method === 'PUT') {
-            await db.collection(`users/${userId}/categories/${categoryId}/groups/${groupId}/items`).doc(id).update({
+            await db.collection(`products`).doc(id).update({
                 ...product,
+                groupId,
+                categoryId,
+                userId,
                 updated: new Date().toISOString(),
             });
         } else if (req.method === 'DELETE') {
-            await db.collection(`users/${userId}/categories/${categoryId}/groups/${groupId}/items`).doc(id).delete();
+            await db.collection(`products`).doc(id).delete();
         }
         res.status(200).end();
     } catch (e) {

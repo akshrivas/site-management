@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { debounce } from 'lodash';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -27,11 +28,48 @@ export default function Category() {
   const [deleteGroup, setDeleteGroup] = useState(false);
   const [mode, setMode] = useState(null);
   const [activeGroup, setActiveGroup] = useState(null);
+  const [searchString, setSearchString] = useState('');
+  const [currCategories, setCurrCategories] = useState([...categories]);
   useEffect(() => {
     if (categories && categories.length) {
       setActiveCategory(categories[0])
+      setCurrCategories(categories)
     }
   }, [categories])
+  useEffect(() => {
+    if(searchString){
+      let filteredCategories = categories && categories.length ? [...categories].filter((item) => item.name.toLowerCase().includes(searchString.toLowerCase())) : []
+      if(filteredCategories.length){
+        setActiveCategory(filteredCategories[0])
+        setCurrCategories([...filteredCategories])
+      }
+      else{
+        setActiveCategory(null)
+        setCurrCategories([])
+      }
+    }
+    else{
+      setCurrCategories(categories)
+      setActiveCategory(categories[0])
+    }
+  }, [searchString])
+  const filterCategories = () => {
+    if(searchString){
+      let filteredCategories = categories && categories.length ? [...categories].filter((item) => item.name.toLowerCase().includes(searchString.toLowerCase())) : []
+      if(filteredCategories.length){
+        setActiveCategory(filteredCategories[0])
+        setCurrCategories([...filteredCategories])
+      }
+      else{
+        setActiveCategory(null)
+        setCurrCategories([])
+      }
+    }
+    else{
+      setCurrCategories(categories)
+      setActiveCategory(categories[0])
+    }
+  }
   const handleClickOpen = (val) => {
     setOpen(true);
     setMode(val);
@@ -69,6 +107,8 @@ export default function Category() {
                   className={classes.input}
                   placeholder="Search Categories..."
                   inputProps={{ 'aria-label': 'search categories' }}
+                  value={searchString}
+                  onChange={(e) => setSearchString(e.target.value)}
                 />
                 <IconButton type="submit" className={classes.iconButton} aria-label="search">
                   <SearchIcon />
@@ -77,7 +117,7 @@ export default function Category() {
             </div>
             <div style={{ marginTop: '10px' }}>
               <Paper>
-                <CategoryList categories={categories} setActiveCategory={setActiveCategory} />
+                <CategoryList categories={currCategories} setActiveCategory={setActiveCategory} />
               </Paper>
 
             </div>

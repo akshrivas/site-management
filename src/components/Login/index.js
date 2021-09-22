@@ -14,6 +14,7 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { useStyles } from './loginStyles';
 
 function Copyright() {
@@ -37,6 +38,7 @@ export default function Login() {
     email: 'admin@homeo.com',
     password: 'admin1234'
   });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
   const validationSchema = yup.object({
@@ -52,13 +54,16 @@ export default function Login() {
   const handleSubmit = (values) => {
     console.log(`submitted with ${JSON.stringify(values)}`);
     setError(null)
+    setLoading(true);
     signInWithEmailAndPassword(values.email, values.password)
       .then(authUser => {
         console.log(authUser)
+        // setLoading(false);
         router.push('/dashboard');
       })
       .catch(error => {
         console.log(error)
+        setLoading(false);
         setError(error.message)
       });
   }
@@ -122,9 +127,13 @@ export default function Login() {
               color="primary"
               className={classes.submit}
             >
-              Sign In
+              {
+                loading ?
+                <CircularProgress color="white" style={{ height: '20px', width: '20px' }} />
+                : 'Sign In'
+              }
             </Button>
-            <Grid container>
+            {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
@@ -135,7 +144,7 @@ export default function Login() {
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </form>
         </div>
         <Box mt={8}>

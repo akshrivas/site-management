@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
+import { useStyles } from '../../AddProducts/AddProductStyles';
 import Dialog from '@material-ui/core/Dialog';
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -20,6 +23,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { urlConstants } from 'src/config';
 import useUid from 'src/utils/useUid';
+import storage from 'src/utils/storage';
 
 const styles = (theme) => ({
     root: {
@@ -70,8 +74,11 @@ export default function AddGroup({
     const [group, setGroup] = useState({
         name: '',
         description: '',
+        image: '',
         active: true
     });
+    const [loading, setLoading] = useState(false);
+    const classes = useStyles();
     const [saving, setSaving] = useState(false);
     useEffect(() => {
         if (activeGroup) {
@@ -87,6 +94,9 @@ export default function AddGroup({
             .string()
             .required('This field is required.'),
         description: yup
+            .string()
+            .required('This field is required.'),
+        image: yup
             .string()
             .required('This field is required.'),
         active: yup
@@ -140,6 +150,21 @@ export default function AddGroup({
             handleSubmit(values);
         },
     });
+    const handleUpload = (e) => {
+        e.preventDefault();
+        const file = e.target.files[0];
+        const ref = storage.ref(`/${uid}/${file.name}-${Date.now()}`);
+        const uploadTask = ref.put(file);
+        setLoading(true);
+        uploadTask.on("state_changed", console.log, console.error, () => {
+          ref
+            .getDownloadURL()
+            .then((url) => {
+              setLoading(false);
+              formik.setFieldValue('image', url);
+            });
+        });
+      }
     return (
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
             <DialogTitle id="customized-dialog-title" onClose={handleClose}>
@@ -148,6 +173,7 @@ export default function AddGroup({
             <DialogContent dividers>
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={3}>
+                    <Grid item xs={6}>
                         <Grid item xs={12}>
                             <TextField label="Group Name" variant="outlined"
                                 id="name"
@@ -177,8 +203,45 @@ export default function AddGroup({
                                 helperText={formik.touched.description && formik.errors.description}
                             />
                         </Grid>
+                        </Grid>
+                        <Grid item xs={6}>
+                        <Grid item xs={12}>
+                            <Grid container>
+                                <Card className={classes.placeholder}>
+                                    {
+                                        loading ?
+                                            <div className={classes.groupMediaDiv}>
+                                                <CircularProgress />
+                                            </div>
+                                            : <CardMedia
+                                                className={classes.groupMedia}
+                                                image={formik.values.image ? formik.values.image : "https://archive.org/download/no-photo-available/no-photo-available.png"}
+                                                title="Contemplative Reptile"
+                                            />
+                                    }
+                                    <div style={{ padding: '10px', textAlign: 'center' }}>
+                                        <FormControl component="fieldset" id="image-input" error={formik.touched.image && formik.errors.image}>
+                                            <input
+                                                accept="image/*"
+                                                className={classes.input}
+                                                id="image"
+                                                multiple
+                                                type="file"
+                                                onChange={handleUpload}
+                                            />
+                                            <label htmlFor="image" style={{}}>
+                                                <Button variant="contained" color="primary" component="span">
+                                                    Upload
+                                                </Button>
+                                            </label>
+                                            <FormHelperText id="my-helper-text">{formik.touched.image && formik.errors.image}</FormHelperText>
+                                        </FormControl>
+                                    </div>
+                                </Card>
+                            </Grid>
+                        </Grid>
+                        </Grid>
                     </Grid>
-
                 </form>
             </DialogContent>
             <DialogActions>
