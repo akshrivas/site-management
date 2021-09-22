@@ -17,15 +17,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CategoryList({ categories, setActiveCategory }) {
+export default function CategoryList({ categories, setActiveCategory, searchString }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
 
   const classes = useStyles();
+  let filteredList = [...categories];
+  if(searchString){
+    filteredList = [...categories].filter((item) => {
+      return item.name.toLowerCase().includes(searchString.toLowerCase())
+    })
+  }
   return (
     <>
       <List className={classes.root}>
         {
-          categories.map((item) => {
+          filteredList.length ?
+          filteredList.map((item) => {
             return (
               <ListItem button key={item.id} onClick={() => setActiveCategory(item)}>
                 <ListItemAvatar>
@@ -37,6 +44,9 @@ export default function CategoryList({ categories, setActiveCategory }) {
               </ListItem>
             )
           })
+          : <ListItem button>
+            <ListItemText primary={'No categories found'} />
+          </ListItem>
         }
       </List>
     </>

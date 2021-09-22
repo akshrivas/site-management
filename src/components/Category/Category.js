@@ -29,11 +29,13 @@ export default function Category() {
   const [mode, setMode] = useState(null);
   const [activeGroup, setActiveGroup] = useState(null);
   const [searchString, setSearchString] = useState('');
-  const [currCategories, setCurrCategories] = useState([...categories]);
   useEffect(() => {
     if (categories && categories.length) {
       setActiveCategory(categories[0])
       setCurrCategories(categories)
+    }
+    else{
+      setActiveCategory(null)
     }
   }, [categories])
   useEffect(() => {
@@ -117,7 +119,7 @@ export default function Category() {
             </div>
             <div style={{ marginTop: '10px' }}>
               <Paper>
-                <CategoryList categories={currCategories} setActiveCategory={setActiveCategory} />
+                <CategoryList categories={categories} setActiveCategory={setActiveCategory} searchString={searchString} />
               </Paper>
 
             </div>
