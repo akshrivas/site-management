@@ -1,17 +1,22 @@
 import { useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
+import useUid from 'src/utils/useUid';
 
 const useProducts = (activeGroup, categoryId) => {
+    const uid = useUid();
     let firestoreObj = {
-        collection: 'products',
-        storeAs: 'products'
+        collection: 'users'
     }
     if (activeGroup && categoryId) {
         firestoreObj = {
-            collection: 'products',
-            where: [
+            collection: 'users',
+            doc: uid,
+            subcollections: [{ 
+              collection: 'products',
+              where: [
                 ['groupId', '==', activeGroup.id]
-            ],
+             ],
+           }],
             storeAs: `products-${activeGroup.id}`
         }
     }

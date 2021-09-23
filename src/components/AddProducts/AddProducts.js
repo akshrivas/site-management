@@ -35,7 +35,9 @@ export default function AddProducts({
   handleClose,
   categoryId,
   groupId,
-  activeProduct
+  activeProduct,
+  groupName,
+  categoryName
 }) {
   const classes = useStyles();
   const uid = useUid();
@@ -98,10 +100,14 @@ export default function AddProducts({
     setSaving(true);
     if (activeProduct) {
       axios.put(`${urlConstants.productOps}/${activeProduct.id}`, {
-        product: values,
+        product: {
+          ...values,
+          groupName,
+          categoryName
+        },
         userId: uid,
         categoryId,
-        groupId
+        groupId,
       }).then(() => {
         setSaving(false);
         formik.setValues({ ...product }, false);
@@ -114,7 +120,11 @@ export default function AddProducts({
     else {
       axios.post(urlConstants.productOps, {
         data: {
-          product: values,
+          product: {
+            ...values,
+          groupName,
+          categoryName
+          },
           userId: uid,
           categoryId,
           groupId

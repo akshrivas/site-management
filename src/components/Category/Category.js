@@ -32,46 +32,11 @@ export default function Category() {
   useEffect(() => {
     if (categories && categories.length) {
       setActiveCategory(categories[0])
-      setCurrCategories(categories)
     }
     else{
       setActiveCategory(null)
     }
   }, [categories])
-  useEffect(() => {
-    if(searchString){
-      let filteredCategories = categories && categories.length ? [...categories].filter((item) => item.name.toLowerCase().includes(searchString.toLowerCase())) : []
-      if(filteredCategories.length){
-        setActiveCategory(filteredCategories[0])
-        setCurrCategories([...filteredCategories])
-      }
-      else{
-        setActiveCategory(null)
-        setCurrCategories([])
-      }
-    }
-    else{
-      setCurrCategories(categories)
-      setActiveCategory(categories[0])
-    }
-  }, [searchString])
-  const filterCategories = () => {
-    if(searchString){
-      let filteredCategories = categories && categories.length ? [...categories].filter((item) => item.name.toLowerCase().includes(searchString.toLowerCase())) : []
-      if(filteredCategories.length){
-        setActiveCategory(filteredCategories[0])
-        setCurrCategories([...filteredCategories])
-      }
-      else{
-        setActiveCategory(null)
-        setCurrCategories([])
-      }
-    }
-    else{
-      setCurrCategories(categories)
-      setActiveCategory(categories[0])
-    }
-  }
   const handleClickOpen = (val) => {
     setOpen(true);
     setMode(val);

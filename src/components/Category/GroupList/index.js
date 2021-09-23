@@ -34,7 +34,7 @@ const useRowStyles = makeStyles({
 });
 
 function Row(props) {
-  const { row, categoryId, handleClick } = props;
+  const { row, categoryId, handleClick, categoryName } = props;
   const [open, setOpen] = useState(false);
   const [dialogs, setDialogs] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
@@ -89,6 +89,8 @@ function Row(props) {
       />
       <AddProducts handleClose={handleClose} dialogs={dialogs} categoryId={categoryId} groupId={row.id}
         activeProduct={activeProduct}
+        groupName={row.name}
+        categoryName={categoryName}
       />
       <DeleteProduct open={deleteOpen} handleClose={() => setDeleteOpen(false)}
         categoryId={categoryId} groupId={row.id}
@@ -115,7 +117,7 @@ export default function GroupList({ activeCategory, handleAction }) {
             </TableHead>
             <TableBody>
               {groups.map((row) => (
-                <Row key={row.id} row={row} categoryId={activeCategory.id} handleClick={handleAction} />
+                <Row key={row.id} row={row} categoryId={activeCategory.id} categoryName={activeCategory.name} handleClick={handleAction} />
               ))}
             </TableBody>
           </Table>

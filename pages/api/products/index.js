@@ -14,7 +14,7 @@ export default async (request, response) => {
       //   console.log('product already existings')
       // }
       // else{
-        const { id } = await db.collection(`products`).add({
+        const { id } = await db.collection(`users/${userId}/products`).add({
           ...product,
           groupId,
           categoryId,
