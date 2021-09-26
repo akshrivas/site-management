@@ -12,10 +12,8 @@ import { useTheme } from '@material-ui/core/styles';
 import useUid from 'src/utils/useUid';
 import { urlConstants } from 'src/config';
 
-export default function DeleteProduct({
-    activeProduct,
-    categoryId,
-    groupId,
+export default function DeleteOffer({
+    activeOffer,
     handleClose,
     open
 }) {
@@ -25,11 +23,9 @@ export default function DeleteProduct({
     const uid = useUid();
     const handleClick = () => {
         setLoading(true);
-        axios.delete(`${urlConstants.productOps}/${activeProduct.id}`, {
+        axios.delete(`${urlConstants.offerOps}/${activeOffer.id}`, {
             data: {
                 userId: uid,
-                categoryId,
-                groupId
             }
         }).then(() => {
             setLoading(false);
@@ -46,10 +42,10 @@ export default function DeleteProduct({
             onClose={handleClose}
             aria-labelledby="responsive-dialog-title"
         >
-            <DialogTitle id="responsive-dialog-title">{"Delete Product?"}</DialogTitle>
+            <DialogTitle id="responsive-dialog-title">{"Delete Offer?"}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Are you sure you want to delete this product.
+                    Are you sure you want to delete this offer.
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

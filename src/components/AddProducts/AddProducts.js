@@ -147,7 +147,7 @@ export default function AddProducts({
   const handleUpload = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    const ref = storage.ref(`/${uid}/${file.name}`);
+    const ref = storage.ref(`/${uid}/${file.name}-${Date.now()}`);
     const uploadTask = ref.put(file);
     setLoading(true);
     uploadTask.on("state_changed", console.log, console.error, () => {

@@ -3,7 +3,8 @@ const baseUrl = process.env.NODE_ENV == 'production' ? process.env.NEXT_PUBLIC_B
 const urlConstants = {
     categoryOps: `${baseUrl}/api/categories`,
     productOps: `${baseUrl}/api/products`,
-    groupOps: `${baseUrl}/api/groups`
+    groupOps: `${baseUrl}/api/groups`,
+    offerOps: `${baseUrl}/api/offers`
 }
 
 export default urlConstants
