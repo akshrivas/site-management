@@ -97,8 +97,7 @@ export default function AddGroup({
             .string()
             .required('This field is required.'),
         image: yup
-            .string()
-            .required('This field is required.'),
+            .string(),
         active: yup
             .bool()
             .required('This field is required.')

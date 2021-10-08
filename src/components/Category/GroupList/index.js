@@ -15,7 +15,6 @@ import Button from '@material-ui/core/Button';
 import AddProducts from 'src/components/AddProducts';
 import DeleteProduct from '../DeleteProduct';
 
-import useGroups from './useGroups';
 import ProductsList from '../ProductsList';
 
 
@@ -100,8 +99,7 @@ function Row(props) {
   );
 }
 
-export default function GroupList({ activeCategory, handleAction }) {
-  const groups = useGroups(activeCategory);
+export default function GroupList({ groups, activeCategory, handleAction }) {
   return (
     <TableContainer component={Paper}>
       {

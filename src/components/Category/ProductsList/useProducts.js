@@ -7,6 +7,7 @@ const useProducts = (activeGroup, categoryId) => {
     let firestoreObj = {
         collection: 'users'
     }
+    console.log(activeGroup);
     if (activeGroup && categoryId) {
         firestoreObj = {
             collection: 'users',
@@ -23,7 +24,6 @@ const useProducts = (activeGroup, categoryId) => {
     useFirestoreConnect([
         { ...firestoreObj }
     ])
-    console.log(activeGroup)
     return useSelector(state => state.firestore.ordered[activeGroup ? `products-${activeGroup.id}` : 'products'] || [])
 };
 

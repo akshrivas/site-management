@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -29,14 +29,17 @@ export default function Category() {
   const [mode, setMode] = useState(null);
   const [activeGroup, setActiveGroup] = useState(null);
   const [searchString, setSearchString] = useState('');
+
   useEffect(() => {
     if (categories && categories.length) {
-      setActiveCategory(categories[0])
+      setActiveCategory(categories[0]);
+    } else {
+      setActiveCategory(null);
     }
-    else{
-      setActiveCategory(null)
-    }
-  }, [categories])
+  }, [categories]);
+
+  console.log('===>', categories, activeCategory);
+
   const handleClickOpen = (val) => {
     setOpen(true);
     setMode(val);
@@ -47,23 +50,28 @@ export default function Category() {
   };
   const handleGroupClose = () => {
     setGroupOpen(false);
-  }
+  };
   const handleGroupOpen = () => {
+    setActiveGroup(null);
     setGroupOpen(true);
-  }
+  };
   const handleAction = (action, group) => {
     setActiveGroup({ ...group });
     if (action === 'edit') {
       setGroupOpen(true);
-    }
-    else{
+    } else {
       setDeleteGroup(true);
     }
-  }
+  };
   return (
     <>
       <div className={classes.root}>
-        <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{ display: 'none' }}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleClickOpen}
+          style={{ display: 'none' }}
+        >
           Create Category
         </Button>
         <Grid container spacing={3} alignItems="stretch">
@@ -77,16 +85,23 @@ export default function Category() {
                   value={searchString}
                   onChange={(e) => setSearchString(e.target.value)}
                 />
-                <IconButton type="submit" className={classes.iconButton} aria-label="search">
+                <IconButton
+                  type="submit"
+                  className={classes.iconButton}
+                  aria-label="search"
+                >
                   <SearchIcon />
                 </IconButton>
               </Paper>
             </div>
             <div style={{ marginTop: '10px' }}>
               <Paper>
-                <CategoryList categories={categories} setActiveCategory={setActiveCategory} searchString={searchString} />
+                <CategoryList
+                  categories={categories}
+                  setActiveCategory={setActiveCategory}
+                  searchString={searchString}
+                />
               </Paper>
-
             </div>
             <div>
               <Button
@@ -101,7 +116,7 @@ export default function Category() {
               </Button>
             </div>
           </Grid>
-          <Grid item xs={12} sm={9} >
+          <Grid item xs={12} sm={9}>
             <Paper style={{ padding: '10px' }}>
               <Grid
                 container
@@ -114,30 +129,56 @@ export default function Category() {
                     {activeCategory ? activeCategory.name : 'Category Name'}
                   </Typography>
                   <Typography variant="p" gutterBottom>
-                    {activeCategory ? activeCategory.description : 'Category Description'}
+                    {activeCategory
+                      ? activeCategory.description
+                      : 'Category Description'}
                   </Typography>
                 </Grid>
                 <Grid item className={classes.actionItem}>
-                  {
-                    activeCategory ?
-                      <>
-                        <Button variant="outlined" onClick={handleGroupOpen}>Add Group</Button>
-                        <Button variant="outlined" onClick={() => handleClickOpen('edit')}>Edit</Button>
-                        <Button variant="outlined" onClick={() => setDeleteOpen(true)}>Delete</Button>
-                      </>
-                      : null
-                  }
+                  {activeCategory ? (
+                    <>
+                      <Button variant="outlined" onClick={handleGroupOpen}>
+                        Add Group
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleClickOpen('edit')}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        onClick={() => setDeleteOpen(true)}
+                      >
+                        Delete
+                      </Button>
+                    </>
+                  ) : null}
                 </Grid>
               </Grid>
             </Paper>
             <div style={{ marginTop: '10px' }}>
-              <GroupList activeCategory={activeCategory} handleAction={handleAction} />
+              <GroupList
+                activeCategory={activeCategory}
+                groups={activeCategory?.groups || []}
+                handleAction={handleAction}
+              />
             </div>
           </Grid>
         </Grid>
-        <AddCategory open={open} handleClose={handleClose} activeCategory={mode == 'edit' ? activeCategory : null} />
-        <DeleteCategory open={deleteOpen} handleClose={() => setDeleteOpen(false)} categoryId={activeCategory ? activeCategory.id : ''} />
-        <AddGroup open={groupOpen} handleClose={handleGroupClose}
+        <AddCategory
+          open={open}
+          handleClose={handleClose}
+          activeCategory={mode == 'edit' ? activeCategory : null}
+        />
+        <DeleteCategory
+          open={deleteOpen}
+          handleClose={() => setDeleteOpen(false)}
+          categoryId={activeCategory ? activeCategory.id : ''}
+        />
+        <AddGroup
+          open={groupOpen}
+          handleClose={handleGroupClose}
           categoryId={activeCategory ? activeCategory.id : ''}
           activeGroup={activeGroup}
         />
