@@ -48,11 +48,11 @@ export default function ProductsList({ row, open, categoryId, handleAction }) {
                                                     {product.name}
                                                 </TableCell>
                                                 <TableCell>{moment(product.created).format('DD-MM-YYYY')}</TableCell>
-                                                <TableCell align="right">{product.units}</TableCell>
+                                                <TableCell align="right">{product.availableUnits}</TableCell>
                                                 <TableCell>
                                                     {product.description}
                                                 </TableCell>
-                                                <TableCell align="right">{product.originalPrice}</TableCell>
+                                                <TableCell align="right">{product.mrp}</TableCell>
                                                 <TableCell align="right">{product.discount}</TableCell>
                                                 <TableCell align="right">{product.price}</TableCell>
                                                 <TableCell>{product.sku}</TableCell>
