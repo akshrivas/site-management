@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useStyles } from './addofferStyles';
 import Button from '@material-ui/core/Button';
@@ -91,7 +91,8 @@ export default function AddOffer({ open, handleClose, activeOffer }) {
         },
     });
     const categories = useCategories();
-    const groups = useGroups(categoryId ? { id: categoryId } : null);
+    console.log(categories);
+    const groups = useMemo(() => categories?.find(({ id }) => id === categoryId)?.groups, [categoryId, categories]) || [];
     const products = useProducts();
     const handleUpload = (e) => {
         e.preventDefault();
