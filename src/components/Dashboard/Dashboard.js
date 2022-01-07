@@ -16,14 +16,14 @@ function TabPanel(props) {
 
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
       {value === index && (
-        <Box p={3}>
+        <Box p={1}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -44,8 +44,6 @@ function a11yProps(index) {
   };
 }
 
-
-
 export default function Dashboard() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -56,26 +54,36 @@ export default function Dashboard() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" className={classes.header}>
-          <Typography variant="h6" style={{ marginLeft: '10px' }}>
-            Logo
-          </Typography>
-          <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-            <Tab label="Order" {...a11yProps(0)} />
-            <Tab label="Offers" {...a11yProps(1)} />
-            <Tab label="Category" {...a11yProps(2)} />
-          </Tabs>
-          <Button onClick={signOut} color="inherit" style={{ marginRight: '10px' }}>Logout</Button>
-        </AppBar>
-        <TabPanel className={classes.tabheight} value={value} index={0}>
-          Order
-        </TabPanel>
-        <TabPanel className={classes.tabheight} value={value} index={1}>
-          <Offers style={{ height: '100%' }} />
-        </TabPanel>
-        <TabPanel className={classes.tabheight} value={value} index={2}>
-          <Category style={{ height: '100%' }} />
-        </TabPanel>
+      <AppBar position='static' className={classes.header}>
+        <Typography variant='h6' style={{ marginLeft: '10px' }}>
+          Logo
+        </Typography>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label='simple tabs example'
+        >
+          <Tab label='Order' {...a11yProps(0)} />
+          <Tab label='Offers' {...a11yProps(1)} />
+          <Tab label='Category' {...a11yProps(2)} />
+        </Tabs>
+        <Button
+          onClick={signOut}
+          color='inherit'
+          style={{ marginRight: '10px' }}
+        >
+          Logout
+        </Button>
+      </AppBar>
+      <TabPanel className={classes.tabheight} value={value} index={0}>
+        Order
+      </TabPanel>
+      <TabPanel className={classes.tabheight} value={value} index={1}>
+        <Offers style={{ height: '100%' }} />
+      </TabPanel>
+      <TabPanel className={classes.tabheight} value={value} index={2}>
+        <Category style={{ height: '100%' }} />
+      </TabPanel>
     </div>
   );
 }

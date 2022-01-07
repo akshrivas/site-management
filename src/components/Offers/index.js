@@ -71,24 +71,20 @@ export default function Offers() {
                         <Table className={classes.table} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>Item Name</TableCell>
-                                    <TableCell>Item Type</TableCell>
+                                    <TableCell>Title</TableCell>
+                                    <TableCell>Search Term</TableCell>
                                     <TableCell>Start Date</TableCell>
                                     <TableCell>End Date</TableCell>
-                                    <TableCell>Link</TableCell>
                                     <TableCell>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {offers.map((row) => (
                                     <TableRow key={row.name}>
-                                        <TableCell>{row.name}</TableCell>
-                                        <TableCell>{row.itemName}</TableCell>
-                                        <TableCell>{row.itemType}</TableCell>
+                                        <TableCell>{row.title}</TableCell>
+                                        <TableCell>{row.term}</TableCell>
                                         <TableCell>{row.startDate}</TableCell>
                                         <TableCell>{row.endDate}</TableCell>
-                                        <TableCell>{row.link}</TableCell>
                                         <TableCell>
                                             <Icon
                                                 onClick={() => handleAction('edit', row)}
