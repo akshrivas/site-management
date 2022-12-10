@@ -7,8 +7,6 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { useStyles } from './dashboardStyles';
-import Category from '../Category';
-import Offers from '../Offers';
 import { useAuth } from '../../context/AuthProvider';
 import Beds from '../Beds';
 
@@ -78,12 +76,6 @@ export default function Dashboard() {
       </AppBar>
       <TabPanel className={classes.tabheight} value={value} index={0}>
         <Beds style={{ height: '100%' }} />
-      </TabPanel>
-      <TabPanel className={classes.tabheight} value={value} index={1}>
-        <Offers style={{ height: '100%' }} />
-      </TabPanel>
-      <TabPanel className={classes.tabheight} value={value} index={2}>
-        <Category style={{ height: '100%' }} />
       </TabPanel>
     </div>
   );
