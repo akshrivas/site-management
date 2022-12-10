@@ -110,9 +110,8 @@ export default function AddOffer({ open, handleClose, activeOffer }) {
           formik.setValues({ ...offer }, false);
           handleClose();
         })
-        .catch((err) => {
+        .catch(() => {
           setSaving(false);
-          console.log(err);
         });
     } else {
       axios

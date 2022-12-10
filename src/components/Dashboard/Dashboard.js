@@ -10,6 +10,7 @@ import { useStyles } from './dashboardStyles';
 import Category from '../Category';
 import Offers from '../Offers';
 import { useAuth } from '../../context/AuthProvider';
+import Beds from '../Beds';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -63,7 +64,7 @@ export default function Dashboard() {
           onChange={handleChange}
           aria-label='simple tabs example'
         >
-          <Tab label='Order' {...a11yProps(0)} />
+          <Tab label='Beds' {...a11yProps(0)} />
           <Tab label='Offers' {...a11yProps(1)} />
           <Tab label='Category' {...a11yProps(2)} />
         </Tabs>
@@ -76,7 +77,7 @@ export default function Dashboard() {
         </Button>
       </AppBar>
       <TabPanel className={classes.tabheight} value={value} index={0}>
-        Order
+        <Beds style={{ height: '100%' }} />
       </TabPanel>
       <TabPanel className={classes.tabheight} value={value} index={1}>
         <Offers style={{ height: '100%' }} />
