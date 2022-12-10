@@ -63,8 +63,6 @@ export default function Dashboard() {
           aria-label='simple tabs example'
         >
           <Tab label='Beds' {...a11yProps(0)} />
-          <Tab label='Offers' {...a11yProps(1)} />
-          <Tab label='Category' {...a11yProps(2)} />
         </Tabs>
         <Button
           onClick={signOut}
