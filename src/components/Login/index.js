@@ -9,7 +9,6 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -34,12 +33,11 @@ function Copyright() {
 
 export default function Login() {
   const classes = useStyles();
-  const [user, setUser] = useState({
+  const [user] = useState({
     email: 'admin@homeo.com',
     password: 'admin1234'
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const router = useRouter();
   const validationSchema = yup.object({
     email: yup
@@ -52,19 +50,14 @@ export default function Login() {
   });
   const { signInWithEmailAndPassword } = useAuth();
   const handleSubmit = (values) => {
-    console.log(`submitted with ${JSON.stringify(values)}`);
-    setError(null)
     setLoading(true);
     signInWithEmailAndPassword(values.email, values.password)
-      .then(authUser => {
-        console.log(authUser)
+      .then(() => {
         // setLoading(false);
         router.push('/dashboard');
       })
-      .catch(error => {
-        console.log(error)
+      .catch(() => {
         setLoading(false);
-        setError(error.message)
       });
   }
   const formik = useFormik({

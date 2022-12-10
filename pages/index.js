@@ -12,7 +12,7 @@ function Index() {
           Homeo App
         </Typography>
         <Link href="/login" color="secondary">
-          You're being redirected to login page
+          You are being redirected to login page
         </Link>
       </Box>
     </Container>

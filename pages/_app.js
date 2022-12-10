@@ -28,6 +28,7 @@ function MyApp(props) {
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
+    // eslint-disable-next-line no-undef
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);

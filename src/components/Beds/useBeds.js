@@ -4,7 +4,6 @@ import useUid from 'src/utils/useUid';
 
 const useBeds = () => {
     const uid = useUid();
-    console.log(uid);
     let firestoreObj = {
         collection: 'users',
         doc: uid,
