@@ -9,4 +9,16 @@ export const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: '100%',
     },
+    warm: {
+      background: '#FEAF5E',
+      color: '#000'
+    },
+    hot: {
+      background: '#FF6500',
+      color: '#000'
+    },
+    onlyWorms: {
+      background: '#FF2E01',
+      color: '#fff'
+    }
 }));

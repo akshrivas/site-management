@@ -7,7 +7,33 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FormControl, InputLabel } from '@material-ui/core';
 
-export default function UpsertBed({ formik }) {
+
+export default function UpsertBed({ formik, action, initialValues }) {
+  const getWormCount = () => (formik.values.bedLength * formik.values.bedWidth) / 4;
+  const uneditableAfterAdd = action !== 'add';
+  // const uneditableAfterFilled = action !== 'add' && !['Empty', 'In Progress'].includes(formik.values.status);
+  const statusOptionsInAdd = ['Empty', 'Filled', 'In Progress', 'Only Worms'];
+  const statusOptionsInEmpty = ['Filled'];
+  const statusOptionsInFilled = ['In Progress'];
+  const statusOptionsInProgress = ['Only Worms'];
+  const statusOptionsOnlyWarms = ['Empty'];
+
+  const statusMap = {
+    'Empty': statusOptionsInEmpty,
+    'Filled': statusOptionsInFilled,
+    'In Progress': statusOptionsInProgress,
+    'Only Worms': statusOptionsOnlyWarms,
+  };
+
+  let statusOptions;
+
+  if(action === 'add') {
+    statusOptions = statusOptionsInAdd;
+  } else {
+    const { status } = initialValues;
+    statusOptions = statusMap[status];
+  }
+
   return (
     <Grid container>
       <Grid item xs={12} sm={12}>
@@ -25,6 +51,97 @@ export default function UpsertBed({ formik }) {
                   onChange={formik.handleChange}
                   error={formik.touched.bedNumber && formik.errors.bedNumber}
                   helperText={formik.touched.bedNumber && formik.errors.bedNumber}
+                  disabled={uneditableAfterAdd}
+                  fullWidth
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <FormControl fullWidth>
+                <TextField
+                  id='createDate'
+                  label='Create Date'
+                  variant='outlined'
+                  type='date'
+                  name='createDate'
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={formik.values.createDate}
+                  onChange={formik.handleChange}
+                  error={formik.touched.createDate && formik.errors.createDate}
+                  helperText={
+                    formik.touched.createDate && formik.errors.createDate
+                  }
+                  fullWidth
+                  disabled={uneditableAfterAdd}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="status-label">Status</InputLabel>
+                <Select
+                  labelId="status-label"
+                  id="status"
+                  name="status"
+                  label="status"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={formik.values.status}
+                  placeholder="Status"
+                  onChange={formik.handleChange}
+                  fullWidth
+                >
+                  {
+                    statusOptions.map(item => <MenuItem key={item} value={item}>{item}</MenuItem>)
+                  }
+                </Select>
+                <FormHelperText id='my-helper-text'>
+                  {formik.touched.status && formik.errors.status}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <FormControl fullWidth>
+                <TextField
+                  id='fillDate'
+                  label='Fill Date'
+                  variant='outlined'
+                  type='date'
+                  name='fillDate'
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={formik.values.fillDate}
+                  onChange={formik.handleChange}
+                  error={formik.touched.fillDate && formik.errors.fillDate}
+                  helperText={
+                    formik.touched.fillDate && formik.errors.fillDate
+                  }
+                  fullWidth
+                  // disabled={uneditableAfterFilled}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <FormControl fullWidth>
+                <TextField
+                  id='wormsAddedOn'
+                  label='Worms Added On'
+                  variant='outlined'
+                  type='date'
+                  name='wormsAddedOn'
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={formik.values.wormsAddedOn}
+                  onChange={formik.handleChange}
+                  error={formik.touched.wormsAddedOn && formik.errors.wormsAddedOn}
+                  helperText={
+                    formik.touched.wormsAddedOn && formik.errors.wormsAddedOn
+                  }
                   fullWidth
                 />
               </FormControl>
@@ -64,67 +181,43 @@ export default function UpsertBed({ formik }) {
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
-                  id='fillDate'
-                  label='Fill Date'
                   variant='outlined'
-                  type='date'
-                  name='fillDate'
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={formik.values.fillDate}
+                  label='Required Worms (In KG)'
+                  id='requiredWorms'
+                  name='requiredWorms'
+                  type='number'
+                  value={formik.values.requiredWorms || getWormCount()}
                   onChange={formik.handleChange}
-                  error={formik.touched.fillDate && formik.errors.fillDate}
-                  helperText={
-                    formik.touched.fillDate && formik.errors.fillDate
-                  }
-                  fullWidth
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <FormControl fullWidth>
-                <TextField
-                  id='wormsAddedOn'
-                  label='Worms Added On'
-                  variant='outlined'
-                  type='date'
-                  name='wormsAddedOn'
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={formik.values.wormsAddedOn}
-                  onChange={formik.handleChange}
-                  error={formik.touched.wormsAddedOn && formik.errors.wormsAddedOn}
-                  helperText={
-                    formik.touched.wormsAddedOn && formik.errors.wormsAddedOn
-                  }
+                  error={formik.touched.requiredWorms && formik.errors.requiredWorms}
+                  helperText={formik.touched.requiredWorms && formik.errors.requiredWorms}
                   fullWidth
                 />
               </FormControl>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth variant="outlined">
-                <InputLabel id="temprature-label">Temperature</InputLabel>
+                <InputLabel id="temperature-label">Temperature</InputLabel>
                 <Select
-                  labelId="temprature-label"
-                  id="temprature"
+                  labelId="temeprature-label"
+                  id="temperature"
                   name="temperature"
-                  label="temprature"
+                  label="temperature"
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  value={formik.values.temprature}
-                  placeholder="temprature ?"
+                  value={formik.values.temperature}
+                  placeholder="temperature ?"
                   onChange={formik.handleChange}
                   fullWidth
+                  error={formik.touched.temperature && formik.errors.temperature}
+                  helperText={formik.touched.temperature && formik.errors.temperature}
                 >
                   <MenuItem value="Cool">Cool</MenuItem>
                   <MenuItem value="Warm">Warm</MenuItem>
                   <MenuItem value="Hot">Hot</MenuItem>
                 </Select>
-                <FormHelperText id='my-helper-text'>
-                  {formik.touched.temprature && formik.errors.temprature}
+                <FormHelperText error={formik.touched.temperature && formik.errors.temperature}>
+                  {formik.touched.temperature && formik.errors.temperature}
                 </FormHelperText>
               </FormControl>
             </Grid>
@@ -151,38 +244,6 @@ export default function UpsertBed({ formik }) {
                 <FormHelperText id='my-helper-text'>
                   {formik.touched.wormCount && formik.errors.wormCount}
                 </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <FormControl fullWidth>
-                <TextField
-                  variant='outlined'
-                  label='Rake Reminder (In Days)'
-                  id='rakeReminder'
-                  name='rakeReminder'
-                  type='number'
-                  value={formik.values.rakeReminder}
-                  onChange={formik.handleChange}
-                  error={formik.touched.rakeReminder && formik.errors.rakeReminder}
-                  helperText={formik.touched.rakeReminder && formik.errors.rakeReminder}
-                  fullWidth
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <FormControl fullWidth>
-                <TextField
-                  variant='outlined'
-                  label='Harvesting Reminder (In Days)'
-                  id='harvestingReminder'
-                  name='harvestingReminder'
-                  type='number'
-                  value={formik.values.harvestingReminder}
-                  onChange={formik.handleChange}
-                  error={formik.touched.harvestingReminder && formik.errors.harvestingReminder}
-                  helperText={formik.touched.harvestingReminder && formik.errors.harvestingReminder}
-                  fullWidth
-                />
               </FormControl>
             </Grid>
           </Grid>

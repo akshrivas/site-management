@@ -14,6 +14,8 @@ import { useFormik } from 'formik';
 import useUid from 'src/utils/useUid';
 import { urlConstants } from 'src/config';
 import UpsertBed from '../UpsertBed';
+import validationSchema, { initialValues } from '../bedSchema';
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
@@ -25,7 +27,8 @@ export default function AddBed({ open, handleClose }) {
   const [saving, setSaving] = useState(false);
   
   const formik = useFormik({
-    initialValues: {},
+    initialValues,
+    validationSchema,
     onSubmit: (values) => {
       handleSubmit(values);
     },
@@ -81,7 +84,7 @@ export default function AddBed({ open, handleClose }) {
           </Button>
         </Toolbar>
       </AppBar>
-      <UpsertBed handleSubmit={handleSubmit} formik={formik} />
+      <UpsertBed handleSubmit={handleSubmit} formik={formik} action="add" />
     </Dialog>
   );
 }

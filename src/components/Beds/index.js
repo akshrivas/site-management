@@ -44,6 +44,15 @@ export default function Beds() {
         setEditOpen(false);
     }
 
+    const rowClassMapWithTemperature = {
+        Warm: classes.warm,
+        Hot: classes.hot,
+    };
+
+    const rowClassMapWithStatus = {
+        'Only Worms': classes.onlyWorms,
+    };
+
     return (
         <Container fluid>
             <AddBed open={open} handleClose={handleModalClose} />
@@ -77,6 +86,8 @@ export default function Beds() {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Bed Number</TableCell>
+                                    <TableCell>Create Date</TableCell>
+                                    <TableCell>Status</TableCell>
                                     <TableCell>Fill Date</TableCell>
                                     <TableCell>Worms Added On</TableCell>
                                     <TableCell>Temperature</TableCell>
@@ -86,8 +97,10 @@ export default function Beds() {
                             </TableHead>
                             <TableBody>
                                 {beds.map((bed) => (
-                                    <TableRow key={bed.bedNumber}>
+                                    <TableRow key={bed.bedNumber} className={`${rowClassMapWithTemperature[bed.temperature]} ${rowClassMapWithStatus[bed.status]}`}>
                                         <TableCell>{bed.bedNumber}</TableCell>
+                                        <TableCell>{bed.createDate}</TableCell>
+                                        <TableCell>{bed.status}</TableCell>
                                         <TableCell>{bed.fillDate}</TableCell>
                                         <TableCell>{bed.wormsAddedOn}</TableCell>
                                         <TableCell>{bed.temperature}</TableCell>
