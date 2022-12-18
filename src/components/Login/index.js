@@ -50,7 +50,7 @@ export default function Login() {
     signInWithEmailAndPassword(values.email, values.password)
       .then(() => {
         // setLoading(false);
-        router.push("/dashboard");
+        router.push("/beds");
       })
       .catch(() => {
         setLoading(false);

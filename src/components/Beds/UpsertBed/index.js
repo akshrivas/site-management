@@ -1,38 +1,48 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import { FormControl, InputLabel } from '@material-ui/core';
-
+import React from "react";
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import { FormControl, InputLabel } from "@material-ui/core";
 
 export default function UpsertBed({ formik, action, initialValues }) {
-  const getWormCount = () => (formik.values.bedLength * formik.values.bedWidth) / 4;
-  const uneditableAfterAdd = action !== 'add';
-  // const uneditableAfterFilled = action !== 'add' && !['Empty', 'In Progress'].includes(formik.values.status);
-  const statusOptionsInAdd = ['Empty', 'Filled', 'In Progress', 'Only Worms'];
-  const statusOptionsInEmpty = ['Filled'];
-  const statusOptionsInFilled = ['In Progress'];
-  const statusOptionsInProgress = ['Only Worms'];
-  const statusOptionsOnlyWarms = ['Empty'];
+  const getWormCount = () =>
+    (formik.values.bedLength * formik.values.bedWidth) / 4;
+  // const uneditableAfterAdd = action !== "add";
+  // const uneditableAfterFilled = action !== 'add' && !['Empty', 'Active'].includes(formik.values.status);
+  const statusOptionsInAdd = [
+    "Empty",
+    "Filled",
+    "Active",
+    "Ready To Harvest",
+    "Only Worms",
+  ];
+  const statusOptionsInEmpty = ["Filled"];
+  const statusOptionsInFilled = ["Active"];
+  const statusOptionsActive = ["Ready To Harvest", "Only Worms"];
+  const statusOptionsReadyToHarvest = ["Active", "Only Worms"];
+  const statusOptionsOnlyWarms = ["Empty"];
 
   const statusMap = {
-    'Empty': statusOptionsInEmpty,
-    'Filled': statusOptionsInFilled,
-    'In Progress': statusOptionsInProgress,
-    'Only Worms': statusOptionsOnlyWarms,
+    Empty: statusOptionsInEmpty,
+    Filled: statusOptionsInFilled,
+    Active: statusOptionsActive,
+    "Only Worms": statusOptionsOnlyWarms,
+    "Ready To Harvest": statusOptionsReadyToHarvest,
   };
 
   let statusOptions;
 
-  if(action === 'add') {
+  if (action === "add") {
     statusOptions = statusOptionsInAdd;
   } else {
     const { status } = initialValues;
     statusOptions = statusMap[status];
   }
+
+  statusOptions = statusOptionsInAdd;
 
   return (
     <Grid container>
@@ -42,16 +52,18 @@ export default function UpsertBed({ formik, action, initialValues }) {
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
-                  variant='outlined'
-                  label='Bed Number'
-                  id='bedNumber'
-                  name='bedNumber'
-                  type='number'
+                  variant="outlined"
+                  label="Bed Number"
+                  id="bedNumber"
+                  name="bedNumber"
+                  type="number"
                   value={formik.values.bedNumber}
                   onChange={formik.handleChange}
                   error={formik.touched.bedNumber && formik.errors.bedNumber}
-                  helperText={formik.touched.bedNumber && formik.errors.bedNumber}
-                  disabled={uneditableAfterAdd}
+                  helperText={
+                    formik.touched.bedNumber && formik.errors.bedNumber
+                  }
+                  // disabled={uneditableAfterAdd}
                   fullWidth
                 />
               </FormControl>
@@ -59,11 +71,11 @@ export default function UpsertBed({ formik, action, initialValues }) {
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
-                  id='createDate'
-                  label='Create Date'
-                  variant='outlined'
-                  type='date'
-                  name='createDate'
+                  id="createDate"
+                  label="Create Date"
+                  variant="outlined"
+                  type="date"
+                  name="createDate"
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -74,7 +86,7 @@ export default function UpsertBed({ formik, action, initialValues }) {
                     formik.touched.createDate && formik.errors.createDate
                   }
                   fullWidth
-                  disabled={uneditableAfterAdd}
+                  // disabled={uneditableAfterAdd}
                 />
               </FormControl>
             </Grid>
@@ -94,11 +106,13 @@ export default function UpsertBed({ formik, action, initialValues }) {
                   onChange={formik.handleChange}
                   fullWidth
                 >
-                  {
-                    statusOptions.map(item => <MenuItem key={item} value={item}>{item}</MenuItem>)
-                  }
+                  {statusOptions.map((item) => (
+                    <MenuItem key={item} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
                 </Select>
-                <FormHelperText id='my-helper-text'>
+                <FormHelperText id="my-helper-text">
                   {formik.touched.status && formik.errors.status}
                 </FormHelperText>
               </FormControl>
@@ -106,20 +120,18 @@ export default function UpsertBed({ formik, action, initialValues }) {
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
-                  id='fillDate'
-                  label='Fill Date'
-                  variant='outlined'
-                  type='date'
-                  name='fillDate'
+                  id="fillDate"
+                  label="Fill Date"
+                  variant="outlined"
+                  type="date"
+                  name="fillDate"
                   InputLabelProps={{
                     shrink: true,
                   }}
                   value={formik.values.fillDate}
                   onChange={formik.handleChange}
                   error={formik.touched.fillDate && formik.errors.fillDate}
-                  helperText={
-                    formik.touched.fillDate && formik.errors.fillDate
-                  }
+                  helperText={formik.touched.fillDate && formik.errors.fillDate}
                   fullWidth
                   // disabled={uneditableAfterFilled}
                 />
@@ -128,17 +140,19 @@ export default function UpsertBed({ formik, action, initialValues }) {
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
-                  id='wormsAddedOn'
-                  label='Worms Added On'
-                  variant='outlined'
-                  type='date'
-                  name='wormsAddedOn'
+                  id="wormsAddedOn"
+                  label="Worms Added On"
+                  variant="outlined"
+                  type="date"
+                  name="wormsAddedOn"
                   InputLabelProps={{
                     shrink: true,
                   }}
                   value={formik.values.wormsAddedOn}
                   onChange={formik.handleChange}
-                  error={formik.touched.wormsAddedOn && formik.errors.wormsAddedOn}
+                  error={
+                    formik.touched.wormsAddedOn && formik.errors.wormsAddedOn
+                  }
                   helperText={
                     formik.touched.wormsAddedOn && formik.errors.wormsAddedOn
                   }
@@ -149,11 +163,11 @@ export default function UpsertBed({ formik, action, initialValues }) {
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
-                  variant='outlined'
-                  label='Width  (In Feet)'
-                  id='bedWidth'
-                  name='bedWidth'
-                  type='number'
+                  variant="outlined"
+                  label="Width  (In Feet)"
+                  id="bedWidth"
+                  name="bedWidth"
+                  type="number"
                   value={formik.values.bedWidth}
                   onChange={formik.handleChange}
                   error={formik.touched.bedWidth && formik.errors.bedWidth}
@@ -165,15 +179,17 @@ export default function UpsertBed({ formik, action, initialValues }) {
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
-                  variant='outlined'
-                  label='Length (In Feet)'
-                  id='bedLength'
-                  name='bedLength'
-                  type='number'
+                  variant="outlined"
+                  label="Length (In Feet)"
+                  id="bedLength"
+                  name="bedLength"
+                  type="number"
                   value={formik.values.bedLength}
                   onChange={formik.handleChange}
                   error={formik.touched.bedLength && formik.errors.bedLength}
-                  helperText={formik.touched.bedLength && formik.errors.bedLength}
+                  helperText={
+                    formik.touched.bedLength && formik.errors.bedLength
+                  }
                   fullWidth
                 />
               </FormControl>
@@ -181,15 +197,19 @@ export default function UpsertBed({ formik, action, initialValues }) {
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
-                  variant='outlined'
-                  label='Required Worms (In KG)'
-                  id='requiredWorms'
-                  name='requiredWorms'
-                  type='number'
+                  variant="outlined"
+                  label="Required Worms (In KG)"
+                  id="requiredWorms"
+                  name="requiredWorms"
+                  type="number"
                   value={formik.values.requiredWorms || getWormCount()}
                   onChange={formik.handleChange}
-                  error={formik.touched.requiredWorms && formik.errors.requiredWorms}
-                  helperText={formik.touched.requiredWorms && formik.errors.requiredWorms}
+                  error={
+                    formik.touched.requiredWorms && formik.errors.requiredWorms
+                  }
+                  helperText={
+                    formik.touched.requiredWorms && formik.errors.requiredWorms
+                  }
                   fullWidth
                 />
               </FormControl>
@@ -209,14 +229,22 @@ export default function UpsertBed({ formik, action, initialValues }) {
                   placeholder="temperature ?"
                   onChange={formik.handleChange}
                   fullWidth
-                  error={formik.touched.temperature && formik.errors.temperature}
-                  helperText={formik.touched.temperature && formik.errors.temperature}
+                  error={
+                    formik.touched.temperature && formik.errors.temperature
+                  }
+                  helperText={
+                    formik.touched.temperature && formik.errors.temperature
+                  }
                 >
                   <MenuItem value="Cool">Cool</MenuItem>
                   <MenuItem value="Warm">Warm</MenuItem>
                   <MenuItem value="Hot">Hot</MenuItem>
                 </Select>
-                <FormHelperText error={formik.touched.temperature && formik.errors.temperature}>
+                <FormHelperText
+                  error={
+                    formik.touched.temperature && formik.errors.temperature
+                  }
+                >
                   {formik.touched.temperature && formik.errors.temperature}
                 </FormHelperText>
               </FormControl>
@@ -241,7 +269,7 @@ export default function UpsertBed({ formik, action, initialValues }) {
                   <MenuItem value="Medium">Medium</MenuItem>
                   <MenuItem value="High">High</MenuItem>
                 </Select>
-                <FormHelperText id='my-helper-text'>
+                <FormHelperText id="my-helper-text">
                   {formik.touched.wormCount && formik.errors.wormCount}
                 </FormHelperText>
               </FormControl>

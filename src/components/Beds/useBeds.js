@@ -8,6 +8,7 @@ const useBeds = () => {
     subcollections: [
       {
         collection: "beds",
+        orderBy: "bedNumber",
       },
     ],
     storeAs: `beds`,
