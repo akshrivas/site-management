@@ -2,9 +2,9 @@ import db from "src/utils/db";
 
 const editBed = async (req, res) => {
   const { id } = req.query;
-  const { userId, ...rest } = req.body;
-  console.log(userId);
+  const { ...rest } = req.body;
   delete rest.id;
+  delete rest.userId;
   try {
     if (req.method === "PUT") {
       await db
