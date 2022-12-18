@@ -1,52 +1,48 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { useAuth } from '../../context/AuthProvider';
-import * as yup from 'yup';
-import { useFormik } from 'formik';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { useStyles } from './loginStyles';
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import { useAuth } from "../../context/AuthProvider";
+import * as yup from "yup";
+import { useFormik } from "formik";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import Link from "@material-ui/core/Link";
+import Box from "@material-ui/core/Box";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { useStyles } from "./loginStyles";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
 
-
-
 export default function Login() {
   const classes = useStyles();
   const [user] = useState({
-    email: 'admin@homeo.com',
-    password: 'admin1234'
+    email: "admin@homeo.com",
+    password: "admin1234",
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const validationSchema = yup.object({
     email: yup
       .string()
-      .email('Enter a valid email.')
-      .required('This field is required.'),
-    password: yup
-      .string()
-      .required('This field is required.')
+      .email("Enter a valid email.")
+      .required("This field is required."),
+    password: yup.string().required("This field is required."),
   });
   const { signInWithEmailAndPassword } = useAuth();
   const handleSubmit = (values) => {
@@ -54,12 +50,12 @@ export default function Login() {
     signInWithEmailAndPassword(values.email, values.password)
       .then(() => {
         // setLoading(false);
-        router.push('/dashboard');
+        router.push("/dashboard");
       })
       .catch(() => {
         setLoading(false);
       });
-  }
+  };
   const formik = useFormik({
     initialValues: { ...user },
     validationSchema: validationSchema,
@@ -120,11 +116,14 @@ export default function Login() {
               color="primary"
               className={classes.submit}
             >
-              {
-                loading ?
-                <CircularProgress color="white" style={{ height: '20px', width: '20px' }} />
-                : 'Sign In'
-              }
+              {loading ? (
+                <CircularProgress
+                  color="white"
+                  style={{ height: "20px", width: "20px" }}
+                />
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </form>
         </div>

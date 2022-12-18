@@ -1,21 +1,19 @@
-import { useSelector } from 'react-redux';
-import { useFirestoreConnect } from 'react-redux-firebase';
-import useUid from 'src/utils/useUid';
+import { useSelector } from "react-redux";
+import { useFirestoreConnect } from "react-redux-firebase";
 
 const useBeds = () => {
-    const uid = useUid();
-    let firestoreObj = {
-        collection: 'users',
-        doc: uid,
-        subcollections: [{ 
-          collection: 'beds'
-       }],
-       storeAs: `beds`
-    }
-    useFirestoreConnect([
-        { ...firestoreObj }
-    ])
-    return useSelector(state => state.firestore.ordered['beds'] || [])
+  let firestoreObj = {
+    collection: "sites",
+    doc: "6ukzrsNDUOR5XoltUTVf",
+    subcollections: [
+      {
+        collection: "beds",
+      },
+    ],
+    storeAs: `beds`,
+  };
+  useFirestoreConnect([{ ...firestoreObj }]);
+  return useSelector((state) => state.firestore.ordered["beds"] || []);
 };
 
 export default useBeds;

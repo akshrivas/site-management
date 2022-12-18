@@ -1,3 +1,3 @@
-const dbUrl = 'https://homeo-88496.firebaseio.com'
+const dbUrl = "https://homeo-88496.firebaseio.com";
 
-export default dbUrl
+export default dbUrl;
