@@ -16,6 +16,7 @@ import useBeds from "./useBeds";
 import Icon from "@mdi/react";
 import { mdiPencilOutline } from "@mdi/js";
 import EditBed from "./EditBed";
+import moment from "moment";
 
 export default function Beds() {
   const classes = useStyles();
@@ -93,6 +94,7 @@ export default function Beds() {
                   <TableRow>
                     <TableCell>Bed Number</TableCell>
                     <TableCell>Status</TableCell>
+                    <TableCell>Age In Days</TableCell>
                     <TableCell>Worms Added On</TableCell>
                     <TableCell>Temperature</TableCell>
                     <TableCell>Worm Count</TableCell>
@@ -100,30 +102,41 @@ export default function Beds() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {beds.map((bed) => (
-                    <TableRow
-                      key={bed.bedNumber}
-                      className={`${
-                        rowClassMapWithTemperature[bed.temperature]
-                      } ${rowClassMapWithStatus[bed.status]}`}
-                    >
-                      <TableCell>{bed.bedNumber}</TableCell>
-                      <TableCell>{bed.status}</TableCell>
-                      <TableCell>{bed.wormsAddedOn}</TableCell>
-                      <TableCell>{bed.temperature}</TableCell>
-                      <TableCell>{bed.wormCount}</TableCell>
-                      <TableCell>
-                        <Icon
-                          onClick={() => handleAction("edit", bed)}
-                          path={mdiPencilOutline}
-                          title="Edit Product"
-                          size={1}
-                          color="#434242"
-                          style={{ marginRight: 5, cursor: "pointer" }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {beds.map((bed) => {
+                    const activeDate = moment(bed.wormsAddedOn, "YYYY-MM-DD");
+                    const today = moment();
+                    const age = today.diff(activeDate, "days");
+
+                    return (
+                      <TableRow
+                        key={bed.bedNumber}
+                        className={`${
+                          rowClassMapWithTemperature[bed.temperature]
+                        } ${rowClassMapWithStatus[bed.status]}`}
+                      >
+                        <TableCell>{bed.bedNumber}</TableCell>
+                        <TableCell>{bed.status}</TableCell>
+                        <TableCell>{isNaN(age) ? 0 : age}</TableCell>
+                        <TableCell>
+                          {bed.wormsAddedOn
+                            ? moment(bed.wormsAddedOn).format("DD-MM-YY")
+                            : "-"}
+                        </TableCell>
+                        <TableCell>{bed.temperature}</TableCell>
+                        <TableCell>{bed.wormCount}</TableCell>
+                        <TableCell>
+                          <Icon
+                            onClick={() => handleAction("edit", bed)}
+                            path={mdiPencilOutline}
+                            title="Edit Product"
+                            size={1}
+                            color="#434242"
+                            style={{ marginRight: 5, cursor: "pointer" }}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
