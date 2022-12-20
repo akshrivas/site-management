@@ -112,7 +112,9 @@ export default function Beds() {
                         key={bed.bedNumber}
                         className={`${
                           rowClassMapWithTemperature[bed.temperature]
-                        } ${rowClassMapWithStatus[bed.status]}`}
+                        } ${rowClassMapWithStatus[bed.status]} ${
+                          Number(age) >= 60 ? classes.hot : ""
+                        }`}
                       >
                         <TableCell>{bed.bedNumber}</TableCell>
                         <TableCell>{bed.status}</TableCell>
