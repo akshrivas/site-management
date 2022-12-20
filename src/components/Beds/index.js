@@ -143,7 +143,7 @@ export default function Beds() {
               </Table>
             </TableContainer>
           )}
-          {beds.length == 0 && (
+          {/* {beds.length == 0 && (
             <Typography
               variant="h5"
               align="center"
@@ -154,7 +154,7 @@ export default function Beds() {
             >
               No bed found !
             </Typography>
-          )}
+          )} */}
         </Grid>
       </Paper>
     </Container>
