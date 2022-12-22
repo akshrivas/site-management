@@ -25,6 +25,18 @@ export default function Beds() {
   const [selectedBed, setSelectedBed] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
 
+  const updatedBeds = beds.map((bed) => {
+    const activeDate = moment(bed.wormsAddedOn, "YYYY-MM-DD");
+    const today = moment();
+    const age = today.diff(activeDate, "days");
+    return {
+      ...bed,
+      age,
+    };
+  });
+
+  updatedBeds.sort((a, b) => Number(b.age) - Number(a.age));
+
   const handleAction = (action, item) => {
     setSelectedBed(item);
     if (action == "edit") {
@@ -87,7 +99,7 @@ export default function Beds() {
           justifyContent="space-between"
           alignItems="center"
         >
-          {beds.length > 0 && (
+          {updatedBeds.length > 0 && (
             <TableContainer component={Paper}>
               <Table className={classes.table} aria-label="simple table">
                 <TableHead>
@@ -102,23 +114,20 @@ export default function Beds() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {beds.map((bed) => {
-                    const activeDate = moment(bed.wormsAddedOn, "YYYY-MM-DD");
-                    const today = moment();
-                    const age = today.diff(activeDate, "days");
-
+                  {updatedBeds.map((bed) => {
                     return (
                       <TableRow
                         key={bed.bedNumber}
                         className={`${
                           rowClassMapWithTemperature[bed.temperature]
                         } ${rowClassMapWithStatus[bed.status]} ${
-                          Number(age) >= 60 ? classes.hot : ""
-                        }`}
+                          Number(bed.age) >= 60 ? classes.hot : ""
+                        }
+                        ${Number(bed.age) >= 30 ? classes.warm : ""}`}
                       >
                         <TableCell>{bed.bedNumber}</TableCell>
                         <TableCell>{bed.status}</TableCell>
-                        <TableCell>{isNaN(age) ? 0 : age}</TableCell>
+                        <TableCell>{isNaN(bed.age) ? 0 : bed.age}</TableCell>
                         <TableCell>
                           {bed.wormsAddedOn
                             ? moment(bed.wormsAddedOn).format("DD-MM-YY")
