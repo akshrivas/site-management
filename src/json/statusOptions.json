@@ -1,0 +1,18 @@
+[
+  {
+    "value": "Empty",
+    "label": "Empty"
+  },
+  {
+    "value": "Filled",
+    "label": "Filled(No Worms)"
+  },
+  {
+    "value": "Active",
+    "label": "Active"
+  },
+  {
+    "value": "InActive",
+    "label": "InActive(Only Worms)"
+  }
+]

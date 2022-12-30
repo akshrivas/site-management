@@ -20,18 +20,24 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AddBed({ open, handleClose }) {
+export default function AddBed({ open, handleClose, bedNumber }) {
   const classes = useStyles();
   const uid = useUid();
   const [saving, setSaving] = useState(false);
 
   const formik = useFormik({
-    initialValues,
+    initialValues: {
+      ...initialValues,
+      bedNumber,
+    },
+    enableReinitialize: true,
     validationSchema,
     onSubmit: (values) => {
       handleSubmit(values);
     },
   });
+
+  console.log(formik);
 
   const handleSubmit = (values) => {
     axios

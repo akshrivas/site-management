@@ -1,17 +1,25 @@
+import moment from "moment";
 import db from "src/utils/db";
 
 const addBed = async (request, response) => {
   const { data } = request.body;
-  if (data) {
+  const createDate = moment().format("YYYY-MM-DD");
+  if (data.status === "Filled") {
+    delete data.wormsAddedOn;
+  }
+
+  const updatedData = {
+    ...data,
+    createDate,
+    requiredWorms: data.requiredWorms || (data.bedLength * data.bedWidth) / 4,
+  };
+  console.log("Test ==>", updatedData);
+  if (updatedData) {
     try {
-      let { ...rest } = data;
-      const { id } = await db
+      const result = await db
         .collection(`sites/6ukzrsNDUOR5XoltUTVf/beds`)
-        .add({
-          ...rest,
-          created: new Date().toISOString(),
-        });
-      response.status(200).json({ id, message: "success" });
+        .add(updatedData);
+      response.status(200).json({ id: result.id, message: "success" });
     } catch (e) {
       response.status(400).end();
     }

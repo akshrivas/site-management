@@ -6,43 +6,38 @@ import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { FormControl, InputLabel } from "@material-ui/core";
+import statusOptions from "src/json/statusOptions.json";
 
 export default function UpsertBed({ formik, action, initialValues }) {
   const getWormCount = () =>
     (formik.values.bedLength * formik.values.bedWidth) / 4;
   // const uneditableAfterAdd = action !== "add";
   // const uneditableAfterFilled = action !== 'add' && !['Empty', 'Active'].includes(formik.values.status);
-  const statusOptionsInAdd = [
-    "Empty",
-    "Filled",
-    "Active",
-    "Ready To Harvest",
-    "Only Worms",
-  ];
-  const statusOptionsInEmpty = ["Filled"];
-  const statusOptionsInFilled = ["Active"];
-  const statusOptionsActive = ["Ready To Harvest", "Only Worms"];
-  const statusOptionsReadyToHarvest = ["Active", "Only Worms"];
-  const statusOptionsOnlyWarms = ["Empty"];
+  // const statusOptionsInAdd = ["Empty", "Filled", "Active", "Inactive"];
+  // const statusOptionsInEmpty = ["Filled"];
+  // const statusOptionsInFilled = ["Active"];
+  // const statusOptionsActive = ["Ready To Harvest", "Only Worms"];
+  // const statusOptionsReadyToHarvest = ["Active", "Only Worms"];
+  // const statusOptionsOnlyWarms = ["Empty"];
 
-  const statusMap = {
-    Empty: statusOptionsInEmpty,
-    Filled: statusOptionsInFilled,
-    Active: statusOptionsActive,
-    "Only Worms": statusOptionsOnlyWarms,
-    "Ready To Harvest": statusOptionsReadyToHarvest,
-  };
+  // const statusMap = {
+  //   Empty: statusOptionsInEmpty,
+  //   Filled: statusOptionsInFilled,
+  //   Active: statusOptionsActive,
+  //   "Only Worms": statusOptionsOnlyWarms,
+  //   "Ready To Harvest": statusOptionsReadyToHarvest,
+  // };
 
-  let statusOptions;
+  // let statusOptions;
 
-  if (action === "add") {
-    statusOptions = statusOptionsInAdd;
-  } else {
-    const { status } = initialValues;
-    statusOptions = statusMap[status];
-  }
+  // if (action === "add") {
+  //   statusOptions = statusOptionsInAdd;
+  // } else {
+  //   const { status } = initialValues;
+  //   statusOptions = statusMap[status];
+  // }
 
-  statusOptions = statusOptionsInAdd;
+  // statusOptions = statusOptionsInAdd;
 
   return (
     <Grid container>
@@ -68,7 +63,7 @@ export default function UpsertBed({ formik, action, initialValues }) {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6} lg={3}>
+            {/* <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
                   id="createDate"
@@ -89,7 +84,7 @@ export default function UpsertBed({ formik, action, initialValues }) {
                   // disabled={uneditableAfterAdd}
                 />
               </FormControl>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth variant="outlined">
                 <InputLabel id="status-label">Status</InputLabel>
@@ -107,8 +102,8 @@ export default function UpsertBed({ formik, action, initialValues }) {
                   fullWidth
                 >
                   {statusOptions.map((item) => (
-                    <MenuItem key={item} value={item}>
-                      {item}
+                    <MenuItem key={item.value} value={item.value}>
+                      {item.label}
                     </MenuItem>
                   ))}
                 </Select>
@@ -117,7 +112,7 @@ export default function UpsertBed({ formik, action, initialValues }) {
                 </FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6} lg={3}>
+            {/* <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
                   id="fillDate"
@@ -136,30 +131,32 @@ export default function UpsertBed({ formik, action, initialValues }) {
                   // disabled={uneditableAfterFilled}
                 />
               </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <FormControl fullWidth>
-                <TextField
-                  id="wormsAddedOn"
-                  label="Worms Added On"
-                  variant="outlined"
-                  type="date"
-                  name="wormsAddedOn"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={formik.values.wormsAddedOn}
-                  onChange={formik.handleChange}
-                  error={
-                    formik.touched.wormsAddedOn && formik.errors.wormsAddedOn
-                  }
-                  helperText={
-                    formik.touched.wormsAddedOn && formik.errors.wormsAddedOn
-                  }
-                  fullWidth
-                />
-              </FormControl>
-            </Grid>
+            </Grid> */}
+            {!["Filled", "Empty"].includes(formik.values.status) && (
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl fullWidth>
+                  <TextField
+                    id="wormsAddedOn"
+                    label="Worms Added On"
+                    variant="outlined"
+                    type="date"
+                    name="wormsAddedOn"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    value={formik.values.wormsAddedOn}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.wormsAddedOn && formik.errors.wormsAddedOn
+                    }
+                    helperText={
+                      formik.touched.wormsAddedOn && formik.errors.wormsAddedOn
+                    }
+                    fullWidth
+                  />
+                </FormControl>
+              </Grid>
+            )}
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
@@ -214,6 +211,8 @@ export default function UpsertBed({ formik, action, initialValues }) {
                 />
               </FormControl>
             </Grid>
+
+            {/* {!["Filled", "Empty"].includes(formik.values.status) && ( */}
             <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth variant="outlined">
                 <InputLabel id="temperature-label">Temperature</InputLabel>
@@ -249,31 +248,34 @@ export default function UpsertBed({ formik, action, initialValues }) {
                 </FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel id="wormCount-label">Worm Count</InputLabel>
-                <Select
-                  labelId="wormCount-label"
-                  id="wormCount"
-                  name="wormCount"
-                  label="wormCount"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={formik.values.wormCount}
-                  placeholder="wormCount ?"
-                  onChange={formik.handleChange}
-                  fullWidth
-                >
-                  <MenuItem value="Low">Low</MenuItem>
-                  <MenuItem value="Medium">Medium</MenuItem>
-                  <MenuItem value="High">High</MenuItem>
-                </Select>
-                <FormHelperText id="my-helper-text">
-                  {formik.touched.wormCount && formik.errors.wormCount}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
+            {/* )} */}
+            {!["Filled", "Active", "Empty"].includes(formik.values.status) && (
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel id="wormCount-label">Worm Count</InputLabel>
+                  <Select
+                    labelId="wormCount-label"
+                    id="wormCount"
+                    name="wormCount"
+                    label="wormCount"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    value={formik.values.wormCount}
+                    placeholder="wormCount ?"
+                    onChange={formik.handleChange}
+                    fullWidth
+                  >
+                    <MenuItem value="Low">Low</MenuItem>
+                    <MenuItem value="Medium">Medium</MenuItem>
+                    <MenuItem value="High">High</MenuItem>
+                  </Select>
+                  <FormHelperText id="my-helper-text">
+                    {formik.touched.wormCount && formik.errors.wormCount}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+            )}
           </Grid>
         </Card>
       </Grid>
