@@ -1,0 +1,12 @@
+[
+  {
+    "key": "beds",
+    "title": "Beds",
+    "href": "/beds"
+  },
+  {
+    "key": "activities",
+    "title": "Activities",
+    "href": "/activities"
+  }
+]

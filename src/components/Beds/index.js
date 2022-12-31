@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import AddBed from "./AddBed";
 import { useStyles } from "./bedStyles";
 import useBeds from "./useBeds";
@@ -26,7 +26,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from "@material-ui/core";
+} from "@mui/material";
+import { Box } from "@mui/system";
+import { DATE_FORMAT } from "src/utils/constants";
 
 export default function Beds() {
   const classes = useStyles();
@@ -51,13 +53,13 @@ export default function Beds() {
       .delete(`${urlConstants.bedOps}/${selectedBed.id}`, {
         id: selectedBed.id,
       })
-      .then((response) => {
+      .then(() => {
         setConfirmDelete(false);
       })
       .catch(() => {});
   };
 
-  updatedBeds.sort((a, b) => Number(b.age) - Number(a.age));
+  // updatedBeds.sort((a, b) => Number(b.age) - Number(a.age));
 
   const handleAction = (action, item) => {
     setSelectedBed(item);
@@ -90,7 +92,7 @@ export default function Beds() {
   };
 
   return (
-    <Container fluid>
+    <Container fluid sx={{ p: 2 }}>
       <AddBed
         open={open}
         handleClose={handleModalClose}
@@ -103,23 +105,20 @@ export default function Beds() {
           selectedBed={selectedBed}
         />
       )}
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          p: 2,
+        }}
       >
-        <Grid item>
-          <Typography variant="h6" gutterBottom>
-            Beds
-          </Typography>
-        </Grid>
-        <Grid item className={classes.actionItem}>
-          <Button variant="outlined" onClick={() => setOpen(true)}>
-            Add Bed
-          </Button>
-        </Grid>
-      </Grid>
+        <Typography variant="h5" color="primary">
+          Beds
+        </Typography>
+        <Button variant="outlined" onClick={() => setOpen(true)}>
+          Add Bed
+        </Button>
+      </Box>
       <Grid
         container
         direction="row"
@@ -157,7 +156,7 @@ export default function Beds() {
                       <TableCell>{isNaN(bed.age) ? 0 : bed.age}</TableCell>
                       <TableCell>
                         {bed.wormsAddedOn
-                          ? moment(bed.wormsAddedOn).format("DD-MM-YY")
+                          ? moment(bed.wormsAddedOn).format(DATE_FORMAT)
                           : "-"}
                       </TableCell>
                       <TableCell>{bed.temperature}</TableCell>

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useStyles } from './editBedStyles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useFormik } from 'formik';
 import useUid from 'src/utils/useUid';
 import { urlConstants } from 'src/config';
@@ -68,7 +68,7 @@ export default function EditBed({ open, handleEditClose, selectedBed }) {
             color='inherit'
             onClick={handleEditClose}
             aria-label='close'
-          >
+            size="large">
             <CloseIcon />
           </IconButton>
           <Typography variant='h6' className={classes.title}>

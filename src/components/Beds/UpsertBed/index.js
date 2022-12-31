@@ -1,43 +1,16 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import { FormControl, InputLabel } from "@material-ui/core";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import FormHelperText from "@mui/material/FormHelperText";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import { FormControl, InputLabel } from "@mui/material";
 import statusOptions from "src/json/statusOptions.json";
 
-export default function UpsertBed({ formik, action, initialValues }) {
+export default function UpsertBed({ formik }) {
   const getWormCount = () =>
     (formik.values.bedLength * formik.values.bedWidth) / 4;
-  // const uneditableAfterAdd = action !== "add";
-  // const uneditableAfterFilled = action !== 'add' && !['Empty', 'Active'].includes(formik.values.status);
-  // const statusOptionsInAdd = ["Empty", "Filled", "Active", "Inactive"];
-  // const statusOptionsInEmpty = ["Filled"];
-  // const statusOptionsInFilled = ["Active"];
-  // const statusOptionsActive = ["Ready To Harvest", "Only Worms"];
-  // const statusOptionsReadyToHarvest = ["Active", "Only Worms"];
-  // const statusOptionsOnlyWarms = ["Empty"];
-
-  // const statusMap = {
-  //   Empty: statusOptionsInEmpty,
-  //   Filled: statusOptionsInFilled,
-  //   Active: statusOptionsActive,
-  //   "Only Worms": statusOptionsOnlyWarms,
-  //   "Ready To Harvest": statusOptionsReadyToHarvest,
-  // };
-
-  // let statusOptions;
-
-  // if (action === "add") {
-  //   statusOptions = statusOptionsInAdd;
-  // } else {
-  //   const { status } = initialValues;
-  //   statusOptions = statusMap[status];
-  // }
-
-  // statusOptions = statusOptionsInAdd;
 
   return (
     <Grid container>
@@ -112,26 +85,6 @@ export default function UpsertBed({ formik, action, initialValues }) {
                 </FormHelperText>
               </FormControl>
             </Grid>
-            {/* <Grid item xs={12} md={6} lg={3}>
-              <FormControl fullWidth>
-                <TextField
-                  id="fillDate"
-                  label="Fill Date"
-                  variant="outlined"
-                  type="date"
-                  name="fillDate"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={formik.values.fillDate}
-                  onChange={formik.handleChange}
-                  error={formik.touched.fillDate && formik.errors.fillDate}
-                  helperText={formik.touched.fillDate && formik.errors.fillDate}
-                  fullWidth
-                  // disabled={uneditableAfterFilled}
-                />
-              </FormControl>
-            </Grid> */}
             {!["Filled", "Empty"].includes(formik.values.status) && (
               <Grid item xs={12} md={6} lg={3}>
                 <FormControl fullWidth>

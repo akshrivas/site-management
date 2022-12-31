@@ -1,4 +1,5 @@
 import moment from "moment";
+import { DATE_FORMAT } from "src/utils/constants";
 import * as yup from "yup";
 
 const validationSchema = yup.object({
@@ -26,8 +27,8 @@ export const initialValues = {
   status: "Filled",
   bedWidth: 4,
   bedLength: 40,
-  fillDate: moment().format("YYYY-MM-DD"),
-  wormsAddedOn: moment().format("YYYY-MM-DD"),
+  fillDate: moment().format(DATE_FORMAT),
+  wormsAddedOn: moment().format(DATE_FORMAT),
   // requiredWorms: "",
   // temperature: "",
   // wormCount: "",

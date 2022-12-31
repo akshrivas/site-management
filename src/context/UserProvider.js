@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "./AuthProvider";
 import PageSpinner from "../components/PageSpinner";
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 
 const UserProvider = ({ children }) => {
   const { authUser, loading } = useAuth();
@@ -25,7 +25,6 @@ const UserProvider = ({ children }) => {
             flexDirection: "column",
             alignItems: "stretch",
             minHeight: "100vh",
-            border: "solid 5px red",
           }}
         >
           {children}

@@ -1,9 +1,10 @@
 import moment from "moment";
+import { DATE_FORMAT } from "src/utils/constants";
 import db from "src/utils/db";
 
 const addBed = async (request, response) => {
   const { data } = request.body;
-  const createDate = moment().format("YYYY-MM-DD");
+  const createDate = moment().format(DATE_FORMAT);
   if (data.status === "Filled") {
     delete data.wormsAddedOn;
   }
@@ -13,7 +14,6 @@ const addBed = async (request, response) => {
     createDate,
     requiredWorms: data.requiredWorms || (data.bedLength * data.bedWidth) / 4,
   };
-  console.log("Test ==>", updatedData);
   if (updatedData) {
     try {
       const result = await db
