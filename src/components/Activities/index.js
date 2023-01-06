@@ -14,20 +14,19 @@ import { Box } from "@mui/system";
 import { Button, TextField } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
-import axios from "axios";
-import { urlConstants } from "src/config";
-import {
-  DATE_FORMAT,
-  FINAL_HARVEST,
-  FIRST_HARVEST,
-  SECOND_HARVEST,
-} from "src/utils/constants";
+// import axios from "axios";
+// import { urlConstants } from "src/config";
+// import {
+//   FINAL_HARVEST,
+//   FIRST_HARVEST,
+//   SECOND_HARVEST,
+// } from "src/utils/constants";
 
-const actionMap = {
-  [FINAL_HARVEST]: "finalHarvestDate",
-  [SECOND_HARVEST]: "secondHarvestDate",
-  [FIRST_HARVEST]: "firstHarvestDate",
-};
+// const actionMap = {
+//   [FINAL_HARVEST]: "finalHarvestDate",
+//   [SECOND_HARVEST]: "secondHarvestDate",
+//   [FIRST_HARVEST]: "firstHarvestDate",
+// };
 
 export default function Activities() {
   const router = useRouter();
@@ -41,11 +40,11 @@ export default function Activities() {
       },
     });
   };
-  const onComplete = (action) => {
-    console.log(actionMap[action], action.action);
-    console.log({
-      [actionMap[action]]: moment().format(DATE_FORMAT),
-    });
+  const onComplete = () => {
+    // console.log(actionMap[action], action.action);
+    // console.log({
+    //   [actionMap[action]]: moment().format(DATE_FORMAT),
+    // });
     // axios
     //   .put(`${urlConstants.bedOps}/${action.id}`, {
     //     [actionMap[action]]: moment().format(DATE_FORMAT),
