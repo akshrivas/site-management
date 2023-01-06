@@ -1,5 +1,5 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyAwEuNdg5BHtsqUzJasLvZccoi0i0zd9BA",
+  apiKey: "AIzaSyBMfO6nGtYpOoMjFM6wAs6QlbsRfhoRoIE",
   authDomain: "homeo-88496.firebaseapp.com",
   projectId: "homeo-88496",
   storageBucket: "homeo-88496.appspot.com",

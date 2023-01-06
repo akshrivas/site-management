@@ -14,6 +14,20 @@ import { Box } from "@mui/system";
 import { Button, TextField } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { urlConstants } from "src/config";
+import {
+  DATE_FORMAT,
+  FINAL_HARVEST,
+  FIRST_HARVEST,
+  SECOND_HARVEST,
+} from "src/utils/constants";
+
+const actionMap = {
+  [FINAL_HARVEST]: "finalHarvestDate",
+  [SECOND_HARVEST]: "secondHarvestDate",
+  [FIRST_HARVEST]: "firstHarvestDate",
+};
 
 export default function Activities() {
   const router = useRouter();
@@ -26,6 +40,25 @@ export default function Activities() {
         activityDate: e.target.value,
       },
     });
+  };
+  const onComplete = (action) => {
+    console.log(actionMap[action], action.action);
+    console.log({
+      [actionMap[action]]: moment().format(DATE_FORMAT),
+    });
+    // axios
+    //   .put(`${urlConstants.bedOps}/${action.id}`, {
+    //     [actionMap[action]]: moment().format(DATE_FORMAT),
+    //   })
+    //   .then((response) => {
+    //     setSaving(false);
+    //     if (response.status === 200) {
+    //       handleEditClose();
+    //     }
+    //   })
+    //   .catch(() => {
+    //     setSaving(false);
+    //   });
   };
   return (
     <Container fluid sx={{ p: 2 }}>
@@ -68,24 +101,27 @@ export default function Activities() {
               <TableHead>
                 <TableRow>
                   <TableCell>Bed Number</TableCell>
-                  <TableCell>Age</TableCell>
                   <TableCell>Action</TableCell>
                   <TableCell>Due Date</TableCell>
-                  <TableCell>Status</TableCell>
+                  <TableCell>Delay</TableCell>
                   <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {activities.map((action) => {
+                {activities.map((activity) => {
                   return (
-                    <TableRow key={action.actionNumber}>
-                      <TableCell>{action.bedNumber}</TableCell>
-                      <TableCell>{action.age}</TableCell>
-                      <TableCell>{action.action}</TableCell>
-                      <TableCell>{action.dueDate}</TableCell>
-                      <TableCell>{action.status}</TableCell>
+                    <TableRow key={activity.bedNumber}>
+                      <TableCell>{activity.bedNumber}</TableCell>
+                      <TableCell>{activity.action}</TableCell>
+                      <TableCell>{activity.dueDate}</TableCell>
+                      <TableCell>{activity.age}</TableCell>
                       <TableCell>
-                        <Button variant="outlined">Complete</Button>
+                        <Button
+                          variant="outlined"
+                          onClick={() => onComplete(activity)}
+                        >
+                          Complete
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
