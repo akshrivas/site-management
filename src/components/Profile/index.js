@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, Grid, TextField } from "@mui/material";
+import { Box, Button, Grid, TextField } from "@mui/material";
 import axios from "axios";
 import { useFormik } from "formik";
 import { urlConstants } from "src/config";
@@ -12,7 +12,7 @@ const Profile = () => {
       .put(`${urlConstants.usersOps}/${uid}`, {
         ...values,
       })
-      .then((response) => {
+      .then(() => {
         // console.log(response);
         // setSaving(false);
         // if (response.status === 200) {

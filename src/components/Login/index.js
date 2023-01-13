@@ -4,7 +4,6 @@ import { useAuth } from "../../context/AuthProvider";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -13,7 +12,6 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useStyles } from "./loginStyles";
 import { LoadingButton } from "@mui/lab";
 import BMAlert from "../common/BMAlert";
@@ -51,7 +49,7 @@ export default function Login() {
   const handleSubmit = (values) => {
     setLoading(true);
     signInWithEmailAndPassword(values.email, values.password)
-      .then((e) => {
+      .then(() => {
         setLoading(false);
         router.push("/beds");
       })

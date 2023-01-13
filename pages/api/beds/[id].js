@@ -1,21 +1,21 @@
+import moment from "moment";
 import db from "src/utils/db";
 
 const editBed = async (req, res) => {
-  const { id } = req.query;
-  const { ...rest } = req.body;
-  delete rest.id;
-  delete rest.userId;
+  const { id: bed } = req.query;
+  const { data, site, userId } = req.body;
   try {
     if (req.method === "PUT") {
       await db
-        .collection(`sites/6ukzrsNDUOR5XoltUTVf/beds`)
-        .doc(id)
+        .collection(`sites/${site}/beds`)
+        .doc(bed)
         .update({
-          ...rest,
-          updated: new Date().toISOString(),
+          ...data,
+          updated: moment().toISOString(),
+          updatedBy: userId,
         });
     } else if (req.method === "DELETE") {
-      await db.collection(`sites/6ukzrsNDUOR5XoltUTVf/beds`).doc(id).delete();
+      await db.collection(`sites/${site}/beds`).doc(bed).delete();
     }
     res.status(200).end();
   } catch (e) {

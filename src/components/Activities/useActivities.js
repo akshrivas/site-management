@@ -32,7 +32,6 @@ const useActivities = () => {
     const withActions = actions?.reduce((acc, current) => {
       // console.log(current);
       const data = getUrgentBedActivities(current);
-      console.log("data ==>", data);
       if (!data) return acc;
       const due = moment(data.dueDate);
       const activity = moment(activityDate);
