@@ -2,9 +2,9 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useFirestoreConnect } from "react-redux-firebase";
+import { isLoaded, useFirestoreConnect } from "react-redux-firebase";
+import useSite from "src/hooks/useSite";
 import { getUrgentBedActivities } from "src/utils/betActivities";
-import { DATE_FORMAT } from "src/utils/constants";
 
 const useActivities = () => {
   const router = useRouter();
@@ -12,9 +12,10 @@ const useActivities = () => {
   const {
     query: { activityDate = moment().format("YYYY-MM-DD") },
   } = router;
+  const site = useSite();
   let firestoreObj = {
     collection: "sites",
-    doc: "6ukzrsNDUOR5XoltUTVf",
+    doc: site,
     subcollections: [
       {
         collection: "beds",
@@ -26,27 +27,32 @@ const useActivities = () => {
   useFirestoreConnect([{ ...firestoreObj }]);
 
   const actions = useSelector((state) => state.firestore.ordered["beds"]);
+
   useEffect(() => {
     const withActions = actions?.reduce((acc, current) => {
+      // console.log(current);
       const data = getUrgentBedActivities(current);
+      console.log("data ==>", data);
       if (!data) return acc;
-      const due = moment(data.dueDate, DATE_FORMAT).valueOf();
-      const activity = moment(activityDate, "YYYY-MM-DD").valueOf();
-      // console.log(due < activity);
+      const due = moment(data.dueDate);
+      const activity = moment(activityDate);
       const isDue = activity >= due;
-      if (isDue) acc.push(data);
+      if (isDue) {
+        acc.push({
+          ...data,
+          delay: moment().diff(due, "days"),
+        });
+      }
       return acc;
     }, []);
 
-    setData(
-      withActions?.sort(
-        (a, b) =>
-          moment(a.dueDate, DATE_FORMAT).valueOf() -
-          moment(b.dueDate, DATE_FORMAT).valueOf()
-      )
-    );
+    setData(withActions?.sort((a, b) => moment(a.dueDate) - moment(b.dueDate)));
   }, [activityDate, actions]);
-  return data;
+
+  return {
+    data,
+    isLoading: !isLoaded(actions),
+  };
 };
 
 export default useActivities;

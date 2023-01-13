@@ -6,10 +6,7 @@ import {
   SECOND_HARVEST,
 } from "./constants";
 
-const addDays = (d, days) =>
-  moment(d)
-    .add(days + 1, "days")
-    .format(DATE_FORMAT);
+const addDays = (d, days) => moment(d).add(days + 1, "days");
 
 const getBedActivities = (bed) => {
   const { fillDate, bedNumber, id } = bed;
@@ -89,7 +86,7 @@ export const getUrgentBedActivities = (bed) => {
     finalHarvestDate,
     rakeDate,
   } = bed;
-  const d = moment(fillDate, "YYYY-MM-DD");
+  const d = moment(fillDate);
   const today = moment();
   const age = today.diff(d, "days");
   const common = {
@@ -97,6 +94,8 @@ export const getUrgentBedActivities = (bed) => {
     id,
     age,
   };
+
+  // console.log(common, fillDate);
   if (age >= 60 && status === "Active" && !finalHarvestDate) {
     return {
       action: FINAL_HARVEST,
@@ -107,7 +106,12 @@ export const getUrgentBedActivities = (bed) => {
       ...common,
     };
   }
-  if (age >= 45 && status === "Active" && !secondHarvestDate) {
+  if (
+    age >= 45 &&
+    status === "Active" &&
+    !finalHarvestDate &&
+    !secondHarvestDate
+  ) {
     return {
       action: SECOND_HARVEST,
       dueDate: addDays(fillDate, 45),
@@ -117,7 +121,13 @@ export const getUrgentBedActivities = (bed) => {
       ...common,
     };
   }
-  if (age >= 30 && status === "Active" && !firstHarvestDate) {
+  if (
+    age >= 30 &&
+    status === "Active" &&
+    !finalHarvestDate &&
+    !secondHarvestDate &&
+    !firstHarvestDate
+  ) {
     return {
       action: FIRST_HARVEST,
       dueDate: addDays(fillDate, 30),
@@ -127,7 +137,14 @@ export const getUrgentBedActivities = (bed) => {
       ...common,
     };
   }
-  if (age >= 15 && status === "Active" && !rakeDate) {
+  if (
+    age >= 15 &&
+    status === "Active" &&
+    !finalHarvestDate &&
+    !secondHarvestDate &&
+    !firstHarvestDate &&
+    !rakeDate
+  ) {
     return {
       action: "RAKE",
       dueDate: addDays(fillDate, 17),

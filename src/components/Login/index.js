@@ -15,6 +15,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useStyles } from "./loginStyles";
+import { LoadingButton } from "@mui/lab";
+import BMAlert from "../common/BMAlert";
 
 function Copyright() {
   return (
@@ -32,10 +34,11 @@ function Copyright() {
 export default function Login() {
   const classes = useStyles();
   const [user] = useState({
-    email: "admin@homeo.com",
-    password: "admin1234",
+    email: "test@homeo.com",
+    password: "123456",
   });
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(false);
   const router = useRouter();
   const validationSchema = yup.object({
     email: yup
@@ -46,14 +49,14 @@ export default function Login() {
   });
   const { signInWithEmailAndPassword } = useAuth();
   const handleSubmit = (values) => {
-    console.log(values);
-    // setLoading(true);
+    setLoading(true);
     signInWithEmailAndPassword(values.email, values.password)
-      .then(() => {
-        // setLoading(false);
+      .then((e) => {
+        setLoading(false);
         router.push("/beds");
       })
-      .catch(() => {
+      .catch((e) => {
+        setMessage(e.message);
         setLoading(false);
       });
   };
@@ -110,7 +113,7 @@ export default function Login() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button
+            {/* <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -125,12 +128,23 @@ export default function Login() {
               ) : (
                 "Sign In"
               )}
-            </Button>
+            </Button> */}
+            <LoadingButton
+              loading={loading}
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Submit
+            </LoadingButton>
           </form>
         </div>
         <Box mt={8}>
           <Copyright />
         </Box>
+        <BMAlert message={message} setMessage={setMessage} />
       </Container>
     </>
   );

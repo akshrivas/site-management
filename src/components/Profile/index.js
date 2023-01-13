@@ -13,7 +13,7 @@ const Profile = () => {
         ...values,
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         // setSaving(false);
         // if (response.status === 200) {
         //   handleEditClose();
@@ -28,21 +28,13 @@ const Profile = () => {
     validationSchema: profileSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
-      console.log(values);
       handleSubmit({
         name: values.name,
         mobile: values.mobile,
         address: values.address,
       });
-      // router.push({
-      //   pathname: "/analytics",
-      //   query: {
-      //     ...values,
-      //   },
-      // });
     },
   });
-  console.log(formik.errors);
   return (
     <Box
       component="form"

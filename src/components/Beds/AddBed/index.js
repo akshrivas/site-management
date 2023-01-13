@@ -15,6 +15,7 @@ import useUid from "src/utils/useUid";
 import { urlConstants } from "src/config";
 import UpsertBed from "../UpsertBed";
 import validationSchema, { initialValues } from "../bedSchema";
+import useSite from "src/hooks/useSite";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -36,14 +37,13 @@ export default function AddBed({ open, handleClose, bedNumber }) {
       handleSubmit(values);
     },
   });
-
+  const site = useSite();
   const handleSubmit = (values) => {
     axios
-      .post(urlConstants.bedOps, {
-        data: {
-          ...values,
-          userId: uid,
-        },
+      .post(`${urlConstants.bedOps}`, {
+        userId: uid,
+        site,
+        data: values,
       })
       .then((response) => {
         setSaving(false);

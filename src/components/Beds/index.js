@@ -29,17 +29,20 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { DATE_FORMAT } from "src/utils/constants";
+import useSite from "src/hooks/useSite";
+import useUid from "src/utils/useUid";
+import PageSpinner from "../PageSpinner";
 
 export default function Beds() {
   const classes = useStyles();
-  const beds = useBeds();
+  const { beds, isLoading } = useBeds();
   const [open, setOpen] = useState(false);
   const [selectedBed, setSelectedBed] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const updatedBeds = beds.map((bed) => {
-    const activeDate = moment(bed.wormsAddedOn, "YYYY-MM-DD");
+  const updatedBeds = beds?.map((bed) => {
+    const activeDate = moment(bed.wormsAddedOn);
     const today = moment();
     const age = today.diff(activeDate, "days");
     return {
@@ -47,19 +50,23 @@ export default function Beds() {
       age,
     };
   });
+  const site = useSite();
+  const uid = useUid();
 
   const handleDelete = () => {
     axios
       .delete(`${urlConstants.bedOps}/${selectedBed.id}`, {
-        id: selectedBed.id,
+        data: {
+          userId: uid,
+          site,
+          data: {},
+        },
       })
       .then(() => {
         setConfirmDelete(false);
       })
       .catch(() => {});
   };
-
-  // updatedBeds.sort((a, b) => Number(b.age) - Number(a.age));
 
   const handleAction = (action, item) => {
     setSelectedBed(item);
@@ -90,6 +97,8 @@ export default function Beds() {
   const rowClassMapWithStatus = {
     "Only Worms": classes.onlyWorms,
   };
+
+  if (isLoading) return <PageSpinner />;
 
   return (
     <Container fluid sx={{ p: 2 }}>
@@ -125,6 +134,19 @@ export default function Beds() {
         justifyContent="space-between"
         alignItems="center"
       >
+        {beds?.length === 0 && (
+          <Typography
+            variant="h4"
+            color="primary"
+            align="center"
+            sx={{
+              width: "100%",
+              mt: 5,
+            }}
+          >
+            No Beds Available
+          </Typography>
+        )}
         {updatedBeds.length > 0 && (
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
@@ -132,10 +154,8 @@ export default function Beds() {
                 <TableRow>
                   <TableCell>Bed Number</TableCell>
                   <TableCell>Status</TableCell>
+                  <TableCell>Active Since</TableCell>
                   <TableCell>Age In Days</TableCell>
-                  <TableCell>Worms Added On</TableCell>
-                  <TableCell>Temperature</TableCell>
-                  <TableCell>Worm Count</TableCell>
                   <TableCell>Update</TableCell>
                 </TableRow>
               </TableHead>
@@ -143,7 +163,7 @@ export default function Beds() {
                 {updatedBeds.map((bed) => {
                   return (
                     <TableRow
-                      key={bed.bedNumber}
+                      key={bed.id}
                       className={`${
                         rowClassMapWithTemperature[bed.temperature]
                       } ${rowClassMapWithStatus[bed.status]} ${
@@ -153,14 +173,12 @@ export default function Beds() {
                     >
                       <TableCell>{bed.bedNumber}</TableCell>
                       <TableCell>{bed.status}</TableCell>
-                      <TableCell>{isNaN(bed.age) ? 0 : bed.age}</TableCell>
                       <TableCell>
                         {bed.wormsAddedOn
                           ? moment(bed.wormsAddedOn).format(DATE_FORMAT)
                           : "-"}
                       </TableCell>
-                      <TableCell>{bed.temperature}</TableCell>
-                      <TableCell>{bed.wormCount}</TableCell>
+                      <TableCell>{isNaN(bed.age) ? 0 : bed.age}</TableCell>
                       <TableCell>
                         <Icon
                           onClick={() => handleAction("edit", bed)}

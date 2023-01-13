@@ -1,10 +1,14 @@
 import { useSelector } from "react-redux";
-import { useFirestoreConnect } from "react-redux-firebase";
+import { isLoaded, useFirestoreConnect } from "react-redux-firebase";
+import useSite from "src/hooks/useSite";
+import { get } from "lodash";
 
 const useBeds = () => {
+  const site = useSite();
+
   let firestoreObj = {
     collection: "sites",
-    doc: "6ukzrsNDUOR5XoltUTVf",
+    doc: site,
     subcollections: [
       {
         collection: "beds",
@@ -14,7 +18,11 @@ const useBeds = () => {
     storeAs: `beds`,
   };
   useFirestoreConnect([{ ...firestoreObj }]);
-  return useSelector((state) => state.firestore.ordered["beds"] || []);
+  const beds = useSelector((state) => get(state, "firestore.ordered.beds"));
+  return {
+    beds: beds,
+    isLoading: !isLoaded(beds),
+  };
 };
 
 export default useBeds;

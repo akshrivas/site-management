@@ -7,6 +7,8 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { FormControl, InputLabel } from "@mui/material";
 import statusOptions from "src/json/statusOptions.json";
+import moment from "moment";
+import { DATE_FORMAT_FIELDS } from "src/utils/constants";
 
 export default function UpsertBed({ formik }) {
   const getWormCount = () =>
@@ -97,8 +99,15 @@ export default function UpsertBed({ formik }) {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    value={formik.values.wormsAddedOn}
-                    onChange={formik.handleChange}
+                    value={moment(formik.values.wormsAddedOn).format(
+                      DATE_FORMAT_FIELDS
+                    )}
+                    onChange={(e) =>
+                      formik.setFieldValue(
+                        "wormsAddedOn",
+                        moment(e.target.value).toISOString()
+                      )
+                    }
                     error={
                       formik.touched.wormsAddedOn && formik.errors.wormsAddedOn
                     }

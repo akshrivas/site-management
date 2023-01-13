@@ -1,6 +1,5 @@
 import admin from "firebase-admin";
 import { serviceAccount, dbUrl } from "../config";
-console.log(serviceAccount);
 
 if (!admin.apps.length) {
   try {
