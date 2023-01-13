@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import ProfileData from "src/json/ProfileData";
+import ProfileData from "src/json/profileData";
 
 export const profileSchema = yup.object({
   name: yup.string().required("Name is required."),
