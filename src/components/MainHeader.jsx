@@ -13,10 +13,12 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import pages from "src/json/pages.json";
 import Link from "src/Link";
+import { useAuth } from "src/context/AuthProvider";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
+  const { signOut } = useAuth();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -31,7 +33,11 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (e) => {
+    console.log(e.target.dataset.test);
+    if (e.target.dataset.test === "Logout") {
+      signOut();
+    }
     setAnchorElUser(null);
   };
 
@@ -141,8 +147,14 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem
+                  key={setting}
+                  data-test={setting}
+                  onClick={handleCloseUserMenu}
+                >
+                  <Typography textAlign="center" data-test={setting}>
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>

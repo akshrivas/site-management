@@ -1,0 +1,10 @@
+{
+  "labourCostPerDay": 400,
+  "dumperCost": 13500,
+  "trollyCost": 3000,
+  "trollyBananaLeavesCost": 600,
+  "rakeReminderInDays": 15,
+  "firstHarvestDays": 30,
+  "secondHarvestDays": 45,
+  "finalHarvestDays": 60
+}

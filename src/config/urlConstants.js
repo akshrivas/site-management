@@ -1,11 +1,15 @@
-const baseUrl = process.env.NODE_ENV == 'production' ? process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000'
+const baseUrl =
+  process.env.NODE_ENV == "production"
+    ? process.env.NEXT_PUBLIC_BASE_URL
+    : "http://localhost:3000";
 
 const urlConstants = {
-    categoryOps: `${baseUrl}/api/categories`,
-    productOps: `${baseUrl}/api/products`,
-    groupOps: `${baseUrl}/api/groups`,
-    offerOps: `${baseUrl}/api/offers`,
-    bedOps: `${baseUrl}/api/beds`,
-}
+  categoryOps: `${baseUrl}/api/categories`,
+  productOps: `${baseUrl}/api/products`,
+  groupOps: `${baseUrl}/api/groups`,
+  offerOps: `${baseUrl}/api/offers`,
+  bedOps: `${baseUrl}/api/beds`,
+  usersOps: `${baseUrl}/api/users`,
+};
 
-export default urlConstants
+export default urlConstants;

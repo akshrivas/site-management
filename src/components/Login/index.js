@@ -46,7 +46,8 @@ export default function Login() {
   });
   const { signInWithEmailAndPassword } = useAuth();
   const handleSubmit = (values) => {
-    setLoading(true);
+    console.log(values);
+    // setLoading(true);
     signInWithEmailAndPassword(values.email, values.password)
       .then(() => {
         // setLoading(false);

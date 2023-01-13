@@ -14,50 +14,53 @@ import { Box } from "@mui/system";
 import { Button, TextField } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
-// import axios from "axios";
-// import { urlConstants } from "src/config";
-// import {
-//   FINAL_HARVEST,
-//   FIRST_HARVEST,
-//   SECOND_HARVEST,
-// } from "src/utils/constants";
+import axios from "axios";
+import { urlConstants } from "src/config";
+import {
+  DATE_FORMAT,
+  FINAL_HARVEST,
+  FIRST_HARVEST,
+  SECOND_HARVEST,
+  RAKE,
+} from "src/utils/constants";
 
-// const actionMap = {
-//   [FINAL_HARVEST]: "finalHarvestDate",
-//   [SECOND_HARVEST]: "secondHarvestDate",
-//   [FIRST_HARVEST]: "firstHarvestDate",
-// };
+const actionMap = {
+  [FINAL_HARVEST]: "finalHarvestDate",
+  [SECOND_HARVEST]: "secondHarvestDate",
+  [FIRST_HARVEST]: "firstHarvestDate",
+  [RAKE]: "rakeDate",
+};
 
 export default function Activities() {
   const router = useRouter();
   const d = router.query.activityDate || moment().format("YYYY-MM-DD");
   const activities = useActivities();
   const handleDateChange = (e) => {
-    router.reload({
+    router.push({
       pathname: router.pathname,
       query: {
         activityDate: e.target.value,
       },
     });
   };
-  const onComplete = () => {
-    // console.log(actionMap[action], action.action);
-    // console.log({
-    //   [actionMap[action]]: moment().format(DATE_FORMAT),
-    // });
-    // axios
-    //   .put(`${urlConstants.bedOps}/${action.id}`, {
-    //     [actionMap[action]]: moment().format(DATE_FORMAT),
-    //   })
-    //   .then((response) => {
-    //     setSaving(false);
-    //     if (response.status === 200) {
-    //       handleEditClose();
-    //     }
-    //   })
-    //   .catch(() => {
-    //     setSaving(false);
-    //   });
+  const onComplete = (activity) => {
+    // console.log(activity, actionMap[activity.action]);
+    console.log(activity, {
+      [actionMap[activity.action]]: moment().format(DATE_FORMAT),
+    });
+    axios
+      .put(`${urlConstants.bedOps}/${activity.id}`, {
+        [actionMap[activity.action]]: moment().format(DATE_FORMAT),
+      })
+      .then((response) => {
+        // setSaving(false);
+        // if (response.status === 200) {
+        //   handleEditClose();
+        // }
+      })
+      .catch(() => {
+        // setSaving(false);
+      });
   };
   return (
     <Container fluid sx={{ p: 2 }}>
