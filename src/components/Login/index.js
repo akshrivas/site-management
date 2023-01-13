@@ -32,8 +32,8 @@ function Copyright() {
 export default function Login() {
   const classes = useStyles();
   const [user] = useState({
-    email: "test@homeo.com",
-    password: "123456",
+    email: "admin@homeo.com",
+    password: "admin1234",
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(false);
