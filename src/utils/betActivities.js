@@ -1,10 +1,8 @@
+import { groupBy } from "lodash";
 import moment from "moment";
-import {
-  DATE_FORMAT,
-  FINAL_HARVEST,
-  FIRST_HARVEST,
-  SECOND_HARVEST,
-} from "./constants";
+import { FINAL_HARVEST, FIRST_HARVEST, SECOND_HARVEST } from "./constants";
+import activityHoursMap from "src/json/activityHourMap.json";
+import profileData from "src/json/profileData.json";
 
 const addDays = (d, days) => moment(d).add(days + 1, "days");
 
@@ -187,18 +185,35 @@ export const getUrgentBedActivities = (bed) => {
 
 export default getBedActivities;
 
-// { dueDate: moment(fillDate).add(2, "days"), status: "PENDING" },
-//       {
-//         dueDate: moment(fillDate).add(5, "days"),
-//         status: "PENDING",
-//         checkWorms: true,
-//       },
-//     ],
-//     rake: [{ dueDate: moment(fillDate).add(17, "days"), status: "PENDING" }],
-//     harvest: [
-//       { dueDate: moment(fillDate).add(30, "days"), status: "PENDING" },
-//       { dueDate: moment(fillDate).add(45, "days"), status: "PENDING" },
-//       { dueDate: moment(fillDate).add(60, "days"), status: "PENDING" },
-//     ],
+export const transformActivityTabs = (activities = []) => {
+  if (activities.length === 0) return [];
+  const grouped = groupBy(activities, (item) => item.action);
+  let totalCost = 0;
+  let totalLabour = 0;
+  const tabs = Object.keys(grouped).map((item) => {
+    const labour = Math.ceil(
+      (grouped[item].length * activityHoursMap[item]) / 8
+    );
+    const cost = labour * profileData.labourCostPerDay;
+    totalCost += cost;
+    totalLabour += labour;
+    return {
+      key: item,
+      title: item,
+      data: grouped[item],
+      labour: Math.ceil((grouped[item].length * activityHoursMap[item]) / 8),
+      cost,
+    };
+  });
 
-//   });
+  return [
+    {
+      key: "All",
+      title: "All",
+      data: activities,
+      labour: totalLabour,
+      cost: totalCost,
+    },
+    ...tabs,
+  ];
+};

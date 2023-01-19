@@ -22,6 +22,7 @@
     "next-redux-wrapper": "^7.0.2",
     "prop-types": "latest",
     "react": "latest",
+    "react-countup": "^6.4.0",
     "react-dom": "latest",
     "react-redux": "^7.2.4",
     "react-redux-firebase": "^3.10.0",
