@@ -171,16 +171,6 @@ export const getUrgentBedActivities = (bed) => {
       ...common,
     };
   }
-  //   if (status === "Active" && !bedCheckedOn) {
-  //     return {
-  //       action: "ACTIVATE",
-  //       dueDate: addDays(fillDate, 5),
-  //       status: "PENDING",
-  //       completedOn: null,
-  //       age,
-  //       ...common,
-  //     };
-  //   }
 };
 
 export default getBedActivities;

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { createElement, useState } from "react";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -15,7 +14,7 @@ import { useStyles } from "./bedStyles";
 import useBeds from "./useBeds";
 import Icon from "@mdi/react";
 import { mdiPencilOutline } from "@mdi/js";
-import { mdiDeleteOutline } from "@mdi/js";
+// import { mdiDeleteOutline } from "@mdi/js";
 import EditBed from "./EditBed";
 import moment from "moment";
 import axios from "axios";
@@ -26,30 +25,29 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
+  Grid,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { DATE_FORMAT } from "src/utils/constants";
 import useSite from "src/hooks/useSite";
 import useUid from "src/utils/useUid";
 import PageSpinner from "../PageSpinner";
+import BMTabPanel from "../common/BMTabPanel";
+import CountUp from "react-countup";
+import bedIconMap from "src/utils/bedIconMap";
 
 export default function Beds() {
+  const [selectedTab, setSelectedTab] = useState(0);
+  const onTabChange = (val) => {
+    setSelectedTab(val);
+  };
   const classes = useStyles();
-  const { beds, isLoading } = useBeds();
+  const { beds, isLoading, tabs, statistics } = useBeds();
   const [open, setOpen] = useState(false);
   const [selectedBed, setSelectedBed] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-
-  const updatedBeds = beds?.map((bed) => {
-    const activeDate = moment(bed.wormsAddedOn);
-    const today = moment();
-    const age = today.diff(activeDate, "days");
-    return {
-      ...bed,
-      age,
-    };
-  });
   const site = useSite();
   const uid = useUid();
 
@@ -89,15 +87,6 @@ export default function Beds() {
     setEditOpen(false);
   };
 
-  const rowClassMapWithTemperature = {
-    Warm: classes.warm,
-    Hot: classes.hot,
-  };
-
-  const rowClassMapWithStatus = {
-    "Only Worms": classes.onlyWorms,
-  };
-
   if (isLoading) return <PageSpinner />;
 
   return (
@@ -105,7 +94,7 @@ export default function Beds() {
       <AddBed
         open={open}
         handleClose={handleModalClose}
-        bedNumber={updatedBeds.length + 1}
+        bedNumber={beds.length + 1}
       />
       {selectedBed && (
         <EditBed
@@ -128,86 +117,219 @@ export default function Beds() {
           Add Bed
         </Button>
       </Box>
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        {beds?.length === 0 && (
-          <Typography
-            variant="h4"
-            color="primary"
-            align="center"
+
+      {beds?.length === 0 && (
+        <Typography
+          variant="h4"
+          color="primary"
+          align="center"
+          sx={{
+            width: "100%",
+            mt: 5,
+          }}
+        >
+          No Beds Available
+        </Typography>
+      )}
+      {tabs.length > 0 && (
+        <Grid container rowSpacing={3}>
+          {Object.keys(bedIconMap).map((item) => {
+            return (
+              <Grid item key={item} xs={4}>
+                <Box
+                  key={item}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Typography variant="h6" align="center" color="primary">
+                    <CountUp
+                      start={0}
+                      end={statistics[item]}
+                      separator=","
+                      duration={1}
+                    ></CountUp>
+                  </Typography>
+                  {/* {item} */}
+
+                  {createElement(
+                    bedIconMap[item].icon,
+                    {
+                      fontSize: "small",
+                      color: "primary",
+                    },
+                    null
+                  )}
+                  <Typography
+                    variant="body1"
+                    color="primary"
+                    noWrap
+                    sx={{
+                      maxWidth: "100%",
+                    }}
+                  >
+                    {bedIconMap[item].title}
+                  </Typography>
+                </Box>
+              </Grid>
+            );
+          })}
+          {/* <Box
             sx={{
-              width: "100%",
-              mt: 5,
+              width: 100,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
             }}
           >
-            No Beds Available
-          </Typography>
-        )}
-        {updatedBeds.length > 0 && (
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Bed Number</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Active Since</TableCell>
-                  <TableCell>Age In Days</TableCell>
-                  <TableCell>Update</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {updatedBeds.map((bed) => {
-                  return (
-                    <TableRow
-                      key={bed.id}
-                      className={`${
-                        rowClassMapWithTemperature[bed.temperature]
-                      } ${rowClassMapWithStatus[bed.status]} ${
-                        Number(bed.age) >= 60 ? classes.hot : ""
-                      }
-                        ${Number(bed.age) >= 30 ? classes.warm : ""}`}
-                    >
-                      <TableCell>{bed.bedNumber}</TableCell>
-                      <TableCell>{bed.status}</TableCell>
-                      <TableCell>
-                        {bed.wormsAddedOn
-                          ? moment(bed.wormsAddedOn).format(DATE_FORMAT)
-                          : "-"}
-                      </TableCell>
-                      <TableCell>{isNaN(bed.age) ? 0 : bed.age}</TableCell>
-                      <TableCell>
-                        <Icon
-                          onClick={() => handleAction("edit", bed)}
-                          path={mdiPencilOutline}
-                          title="Edit Product"
-                          size={1}
-                          color="#434242"
-                          style={{ marginRight: 5, cursor: "pointer" }}
-                        />
-                        <Icon
-                          onClick={() => {
-                            setSelectedBed(bed);
-                            setConfirmDelete(true);
-                          }}
-                          path={mdiDeleteOutline}
-                          title="Edit Product"
-                          size={1}
-                          color="#434242"
-                          style={{ marginRight: 5, cursor: "pointer" }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-      </Grid>
+            <Typography variant="h4" align="center" color="primary">
+              <CountUp
+                start={0}
+                end={statistics.totalBeds}
+                separator=","
+                duration={1}
+              ></CountUp>
+            </Typography>
+            <BedIcon
+              sx={{
+                fontSize: 50,
+              }}
+              color="primary"
+            />
+          </Box>
+          <Box
+            sx={{
+              width: 200,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Typography variant="h4" align="center" color="primary">
+              <CountUp
+                start={0}
+                end={statistics.totalProductiveArea}
+                separator=","
+                duration={1}
+                suffix=" sq ft"
+              ></CountUp>
+            </Typography>
+            <MapIcon
+              sx={{
+                fontSize: 50,
+              }}
+              color="primary"
+            />
+          </Box>
+          <Box
+            sx={{
+              width: 100,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Typography variant="h4" align="center" color="primary">
+              <CountUp
+                start={0}
+                end={statistics.totalPacketsYearly}
+                separator=","
+                duration={1}
+              ></CountUp>
+            </Typography>
+            <ShoppingBagIcon
+              sx={{
+                fontSize: 50,
+              }}
+              color="primary"
+            />
+          </Box>
+          <Box
+            sx={{
+              width: 100,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Typography variant="h4" align="center" color="primary">
+              <CountUp
+                start={0}
+                end={statistics.totalSale}
+                separator=","
+                duration={1}
+              ></CountUp>
+            </Typography>
+            <CurrencyRupeeIcon
+              sx={{
+                fontSize: 50,
+              }}
+              color="primary"
+            />
+          </Box> */}
+        </Grid>
+      )}
+      <Divider sx={{ m: 2 }} />
+      {beds.length > 0 && (
+        <BMTabPanel tabs={tabs} onTabChange={onTabChange}>
+          {tabs.map((tab) => (
+            <TableContainer component={Paper} key={tab.key}>
+              <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Bed Number</TableCell>
+                    <TableCell>Bed Size</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Active Since</TableCell>
+                    <TableCell>Age In Days</TableCell>
+                    <TableCell>Update</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {tabs[selectedTab].data.map((bed) => {
+                    return (
+                      <TableRow key={bed.id}>
+                        <TableCell>{bed.bedNumber}</TableCell>
+                        <TableCell>{bed.size}</TableCell>
+                        <TableCell>{bed.status}</TableCell>
+                        <TableCell>
+                          {bed.wormsAddedOn
+                            ? moment(bed.wormsAddedOn).format(DATE_FORMAT)
+                            : "-"}
+                        </TableCell>
+                        <TableCell>{isNaN(bed.age) ? 0 : bed.age}</TableCell>
+                        <TableCell>
+                          <Icon
+                            onClick={() => handleAction("edit", bed)}
+                            path={mdiPencilOutline}
+                            title="Edit Product"
+                            size={1}
+                            color="#434242"
+                            style={{ marginRight: 5, cursor: "pointer" }}
+                          />
+                          {/* <Icon
+                            onClick={() => {
+                              setSelectedBed(bed);
+                              setConfirmDelete(true);
+                            }}
+                            path={mdiDeleteOutline}
+                            title="Edit Product"
+                            size={1}
+                            color="#434242"
+                            style={{ marginRight: 5, cursor: "pointer" }}
+                          /> */}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ))}
+        </BMTabPanel>
+      )}
       <Dialog
         open={confirmDelete}
         onClose={() => setConfirmDelete(false)}
