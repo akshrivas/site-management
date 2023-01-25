@@ -12,9 +12,6 @@ import TableRow from "@mui/material/TableRow";
 import AddBed from "./AddBed";
 import { useStyles } from "./bedStyles";
 import useBeds from "./useBeds";
-import Icon from "@mdi/react";
-import { mdiPencilOutline } from "@mdi/js";
-// import { mdiDeleteOutline } from "@mdi/js";
 import EditBed from "./EditBed";
 import moment from "moment";
 import axios from "axios";
@@ -36,6 +33,8 @@ import PageSpinner from "../PageSpinner";
 import BMTabPanel from "../common/BMTabPanel";
 import CountUp from "react-countup";
 import bedIconMap from "src/utils/bedIconMap";
+import BasicMenu from "../common/BMMenu";
+import { get } from "lodash";
 
 export default function Beds() {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -43,17 +42,19 @@ export default function Beds() {
     setSelectedTab(val);
   };
   const classes = useStyles();
-  const { beds, isLoading, tabs, statistics } = useBeds();
   const [open, setOpen] = useState(false);
-  const [selectedBed, setSelectedBed] = useState(null);
+  const [selectedBedId, setSelectedBedId] = useState(null);
+  const { beds, isLoading, tabs, statistics, selectedBed } =
+    useBeds(selectedBedId);
   const [editOpen, setEditOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmComplete, setConfirmComplete] = useState(false);
   const site = useSite();
   const uid = useUid();
 
   const handleDelete = () => {
     axios
-      .delete(`${urlConstants.bedOps}/${selectedBed.id}`, {
+      .delete(`${urlConstants.bedOps}/${selectedBedId}`, {
         data: {
           userId: uid,
           site,
@@ -66,25 +67,58 @@ export default function Beds() {
       .catch(() => {});
   };
 
-  const handleAction = (action, item) => {
-    setSelectedBed(item);
-    if (action === "edit") {
-      setEditOpen(true);
-    } else if (action === "delete") {
-      setEditOpen(true);
-    } else {
-      setOpen(true);
-    }
+  const handleRestart = () => {
+    axios
+      .put(`${urlConstants.bedOps}/${selectedBedId}`, {
+        userId: uid,
+        site,
+        data: selectedBed,
+        action: "Complete",
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setConfirmComplete(false);
+        }
+      })
+      .catch(() => {});
   };
 
   const handleModalClose = () => {
-    setSelectedBed(null);
+    setSelectedBedId(null);
     setOpen(false);
   };
 
   const handleEditClose = () => {
-    setSelectedBed(null);
+    setSelectedBedId(null);
     setEditOpen(false);
+  };
+
+  const handleMenuActions = (e) => {
+    // console.log(e.target.value);
+    const action = get(e, "target.dataset.action");
+    const bed = get(e, "target.dataset.bed");
+    setSelectedBedId(bed);
+    if (action === "Edit") {
+      setEditOpen(true);
+    } else if (action === "Complete") {
+      setConfirmComplete(true);
+    }
+  };
+
+  const getActionItems = (status) => {
+    return [
+      {
+        title: "Edit",
+        key: "Edit",
+        onClick: handleMenuActions,
+      },
+      {
+        title: "Complete",
+        key: "Complete",
+        disabled: status !== "InActive",
+        onClick: handleMenuActions,
+      },
+    ];
   };
 
   if (isLoading) return <PageSpinner />;
@@ -100,7 +134,10 @@ export default function Beds() {
         <EditBed
           open={editOpen}
           handleEditClose={handleEditClose}
-          selectedBed={selectedBed}
+          selectedBed={{
+            id: selectedBedId,
+            ...selectedBed,
+          }}
         />
       )}
       <Box
@@ -176,99 +213,6 @@ export default function Beds() {
               </Grid>
             );
           })}
-          {/* <Box
-            sx={{
-              width: 100,
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Typography variant="h4" align="center" color="primary">
-              <CountUp
-                start={0}
-                end={statistics.totalBeds}
-                separator=","
-                duration={1}
-              ></CountUp>
-            </Typography>
-            <BedIcon
-              sx={{
-                fontSize: 50,
-              }}
-              color="primary"
-            />
-          </Box>
-          <Box
-            sx={{
-              width: 200,
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Typography variant="h4" align="center" color="primary">
-              <CountUp
-                start={0}
-                end={statistics.totalProductiveArea}
-                separator=","
-                duration={1}
-                suffix=" sq ft"
-              ></CountUp>
-            </Typography>
-            <MapIcon
-              sx={{
-                fontSize: 50,
-              }}
-              color="primary"
-            />
-          </Box>
-          <Box
-            sx={{
-              width: 100,
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Typography variant="h4" align="center" color="primary">
-              <CountUp
-                start={0}
-                end={statistics.totalPacketsYearly}
-                separator=","
-                duration={1}
-              ></CountUp>
-            </Typography>
-            <ShoppingBagIcon
-              sx={{
-                fontSize: 50,
-              }}
-              color="primary"
-            />
-          </Box>
-          <Box
-            sx={{
-              width: 100,
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Typography variant="h4" align="center" color="primary">
-              <CountUp
-                start={0}
-                end={statistics.totalSale}
-                separator=","
-                duration={1}
-              ></CountUp>
-            </Typography>
-            <CurrencyRupeeIcon
-              sx={{
-                fontSize: 50,
-              }}
-              color="primary"
-            />
-          </Box> */}
         </Grid>
       )}
       <Divider sx={{ m: 2 }} />
@@ -301,25 +245,11 @@ export default function Beds() {
                         </TableCell>
                         <TableCell>{isNaN(bed.age) ? 0 : bed.age}</TableCell>
                         <TableCell>
-                          <Icon
-                            onClick={() => handleAction("edit", bed)}
-                            path={mdiPencilOutline}
-                            title="Edit Product"
-                            size={1}
-                            color="#434242"
-                            style={{ marginRight: 5, cursor: "pointer" }}
+                          <BasicMenu
+                            title="Actions"
+                            items={getActionItems(bed.status)}
+                            bed={bed.id}
                           />
-                          {/* <Icon
-                            onClick={() => {
-                              setSelectedBed(bed);
-                              setConfirmDelete(true);
-                            }}
-                            path={mdiDeleteOutline}
-                            title="Edit Product"
-                            size={1}
-                            color="#434242"
-                            style={{ marginRight: 5, cursor: "pointer" }}
-                          /> */}
                         </TableCell>
                       </TableRow>
                     );
@@ -353,6 +283,33 @@ export default function Beds() {
           </Button>
           <Button onClick={() => handleDelete()} color="primary">
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={confirmComplete}
+        onClose={() => setConfirmComplete(false)}
+        aria-labelledby="draggable-dialog-title"
+      >
+        <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+          Complete Bed
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            COMPLETING a bed means that it has been fully harvested and is now
+            empty. Are you sure to COMPLETE BED {selectedBed?.bedNumber}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            onClick={() => setConfirmComplete(false)}
+            color="primary"
+          >
+            Cancel
+          </Button>
+          <Button onClick={() => handleRestart()} color="primary">
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>

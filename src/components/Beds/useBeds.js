@@ -4,7 +4,7 @@ import useSite from "src/hooks/useSite";
 import { get, groupBy } from "lodash";
 import moment from "moment";
 
-const useBeds = () => {
+const useBeds = (id) => {
   const site = useSite();
 
   let firestoreObj = {
@@ -20,6 +20,10 @@ const useBeds = () => {
   };
   useFirestoreConnect([{ ...firestoreObj }]);
   const beds = useSelector((state) => get(state, "firestore.ordered.beds"));
+  const selectedBed = useSelector((state) =>
+    get(state, `firestore.data.beds.${id}`)
+  );
+
   const updatedBeds = beds?.map((bed) => {
     const activeDate = moment(bed.wormsAddedOn);
     const today = moment();
@@ -86,6 +90,7 @@ const useBeds = () => {
     tabs: tabsWithAll,
     isLoading: !isLoaded(beds),
     statistics,
+    selectedBed,
   };
 };
 
