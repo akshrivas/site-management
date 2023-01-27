@@ -47,7 +47,6 @@ export default class MyDocument extends Document {
             sizes="16x16"
             href="/icons/16.png"
           />
-          <link rel="manifest" href="/manifest.json" />
           <link
             rel="mask-icon"
             href="/icons/safari-pinned-tab.svg"
