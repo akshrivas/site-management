@@ -7,27 +7,13 @@ import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useStyles } from "./loginStyles";
 import { LoadingButton } from "@mui/lab";
 import BMAlert from "../common/BMAlert";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import Image from "next/image";
+import logo from "public/icons/152.png";
 
 export default function Login() {
   const classes = useStyles();
@@ -70,7 +56,7 @@ export default function Login() {
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <Image src={logo} alt="Logo" />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
@@ -139,9 +125,6 @@ export default function Login() {
             </LoadingButton>
           </form>
         </div>
-        <Box mt={8}>
-          <Copyright />
-        </Box>
         <BMAlert message={message} setMessage={setMessage} />
       </Container>
     </>
