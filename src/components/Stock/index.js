@@ -35,9 +35,11 @@ import { urlConstants } from "src/config";
 import useUid from "src/utils/useUid";
 import useSite from "src/hooks/useSite";
 import useStock from "./useStock";
+import { LoadingButton } from "@mui/lab";
 
 export default function Stock() {
   const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [saving, setSaving] = React.useState(false);
   const { data, details } = useStock();
 
   const handleVisibility = React.useCallback(() => {
@@ -47,6 +49,7 @@ export default function Stock() {
   const site = useSite();
 
   const handleSubmit = (values) => {
+    setSaving(true);
     const updatedValues = { ...values };
     if (updatedValues.type === "OUT") {
       updatedValues.packets = -updatedValues.packets;
@@ -59,11 +62,13 @@ export default function Stock() {
       })
       .then((response) => {
         if (response.data.id) {
+          setSaving(false);
           handleVisibility();
           // handleClose();
         }
       })
       .catch(() => {
+        setSaving(false);
         // setSaving(false);
       });
   };
@@ -299,14 +304,16 @@ export default function Stock() {
                 </Grid>
               </Grid>
             </Grid>
-            <Button
+            <LoadingButton
+              loading={saving}
+              type="submit"
+              fullWidth
               variant="contained"
               color="primary"
-              type="submit"
               disabled={!formik.dirty}
             >
               Save
-            </Button>
+            </LoadingButton>
           </Box>
         </Drawer>
       )}
