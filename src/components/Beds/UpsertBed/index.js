@@ -46,9 +46,6 @@ export default function UpsertBed({ formik }) {
                   variant="outlined"
                   type="date"
                   name="createDate"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   value={formik.values.createDate}
                   onChange={formik.handleChange}
                   error={formik.touched.createDate && formik.errors.createDate}
@@ -68,9 +65,6 @@ export default function UpsertBed({ formik }) {
                   id="status"
                   name="status"
                   label="status"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   value={formik.values.status}
                   placeholder="Status"
                   onChange={formik.handleChange}
@@ -96,9 +90,6 @@ export default function UpsertBed({ formik }) {
                     variant="outlined"
                     type="date"
                     name="wormsAddedOn"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
                     value={moment(formik.values.wormsAddedOn).format(
                       DATE_FORMAT_FIELDS
                     )}
@@ -183,9 +174,6 @@ export default function UpsertBed({ formik }) {
                   id="temperature"
                   name="temperature"
                   label="temperature"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   value={formik.values.temperature}
                   placeholder="temperature ?"
                   onChange={formik.handleChange}
@@ -220,9 +208,6 @@ export default function UpsertBed({ formik }) {
                     id="wormCount"
                     name="wormCount"
                     label="wormCount"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
                     value={formik.values.wormCount}
                     placeholder="wormCount ?"
                     onChange={formik.handleChange}

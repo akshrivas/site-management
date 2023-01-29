@@ -8,5 +8,10 @@
     "key": "activities",
     "title": "Activities",
     "href": "/activities"
+  },
+  {
+    "key": "stock",
+    "title": "Stock",
+    "href": "/stock"
   }
 ]

@@ -107,9 +107,6 @@ export default function Activities() {
           variant="outlined"
           type="date"
           name="activitiyDate"
-          InputLabelProps={{
-            shrink: true,
-          }}
           sx={{
             width: 200,
           }}

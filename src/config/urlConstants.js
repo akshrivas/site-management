@@ -9,6 +9,7 @@ const urlConstants = {
   groupOps: `${baseUrl}/api/groups`,
   offerOps: `${baseUrl}/api/offers`,
   bedOps: `${baseUrl}/api/beds`,
+  stockOps: `${baseUrl}/api/stock`,
   usersOps: `${baseUrl}/api/users`,
 };
 
