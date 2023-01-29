@@ -2,7 +2,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { isLoaded, useFirestoreConnect } from "react-redux-firebase";
+import { isLoaded, isEmpty, useFirestoreConnect } from "react-redux-firebase";
 import useSite from "src/hooks/useSite";
 import { getUrgentBedActivities } from "src/utils/betActivities";
 
@@ -50,7 +50,7 @@ const useActivities = () => {
 
   return {
     data,
-    isLoading: !isLoaded(actions),
+    isLoading: !isLoaded(actions) && isEmpty(actions),
   };
 };
 

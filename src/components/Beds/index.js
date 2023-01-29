@@ -44,14 +44,13 @@ export default function Beds() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [selectedBedId, setSelectedBedId] = useState(null);
-  const { beds, isLoading, tabs, statistics, selectedBed } =
+  const { beds, isLoading, tabs, statistics, selectedBed, noRecords } =
     useBeds(selectedBedId);
   const [editOpen, setEditOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmComplete, setConfirmComplete] = useState(false);
   const site = useSite();
   const uid = useUid();
-
   const handleDelete = () => {
     axios
       .delete(`${urlConstants.bedOps}/${selectedBedId}`, {
@@ -155,7 +154,7 @@ export default function Beds() {
         </Button>
       </Box>
 
-      {beds?.length === 0 && (
+      {noRecords && (
         <Typography
           variant="h4"
           color="primary"
@@ -168,54 +167,57 @@ export default function Beds() {
           No Beds Available
         </Typography>
       )}
-      {tabs.length > 0 && (
-        <Grid container rowSpacing={3}>
-          {Object.keys(bedIconMap).map((item) => {
-            return (
-              <Grid item key={item} xs={4}>
-                <Box
-                  key={item}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Typography variant="h6" align="center" color="primary">
-                    <CountUp
-                      start={0}
-                      end={statistics[item]}
-                      separator=","
-                      duration={1}
-                    ></CountUp>
-                  </Typography>
-                  {/* {item} */}
-
-                  {createElement(
-                    bedIconMap[item].icon,
-                    {
-                      fontSize: "small",
-                      color: "primary",
-                    },
-                    null
-                  )}
-                  <Typography
-                    variant="body1"
-                    color="primary"
-                    noWrap
+      {beds.length > 0 && (
+        <>
+          <Grid container rowSpacing={3}>
+            {Object.keys(bedIconMap).map((item) => {
+              return (
+                <Grid item key={item} xs={4}>
+                  <Box
+                    key={item}
                     sx={{
-                      maxWidth: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      flexDirection: "column",
                     }}
                   >
-                    {bedIconMap[item].title}
-                  </Typography>
-                </Box>
-              </Grid>
-            );
-          })}
-        </Grid>
+                    <Typography variant="h6" align="center" color="primary">
+                      <CountUp
+                        start={0}
+                        end={statistics[item]}
+                        separator=","
+                        duration={1}
+                      ></CountUp>
+                    </Typography>
+                    {/* {item} */}
+
+                    {createElement(
+                      bedIconMap[item].icon,
+                      {
+                        fontSize: "small",
+                        color: "primary",
+                      },
+                      null
+                    )}
+                    <Typography
+                      variant="body1"
+                      color="primary"
+                      noWrap
+                      sx={{
+                        maxWidth: "100%",
+                      }}
+                    >
+                      {bedIconMap[item].title}
+                    </Typography>
+                  </Box>
+                </Grid>
+              );
+            })}
+          </Grid>
+          <Divider sx={{ m: 2 }} />
+        </>
       )}
-      <Divider sx={{ m: 2 }} />
+
       {beds.length > 0 && (
         <BMTabPanel tabs={tabs} onTabChange={onTabChange}>
           {tabs.map((tab) => (

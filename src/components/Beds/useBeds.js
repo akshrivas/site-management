@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { isLoaded, useFirestoreConnect } from "react-redux-firebase";
+import { isLoaded, isEmpty, useFirestoreConnect } from "react-redux-firebase";
 import useSite from "src/hooks/useSite";
 import { get, groupBy } from "lodash";
 import moment from "moment";
@@ -19,7 +19,9 @@ const useBeds = (id) => {
     storeAs: `beds`,
   };
   useFirestoreConnect([{ ...firestoreObj }]);
+
   const beds = useSelector((state) => get(state, "firestore.ordered.beds"));
+  // console.log(beds);
   const selectedBed = useSelector((state) =>
     get(state, `firestore.data.beds.${id}`)
   );
@@ -88,7 +90,8 @@ const useBeds = (id) => {
   return {
     beds: updatedBeds,
     tabs: tabsWithAll,
-    isLoading: !isLoaded(beds),
+    isLoading: !isLoaded(beds) || typeof beds === undefined,
+    noRecords: isLoaded(beds) && isEmpty(beds),
     statistics,
     selectedBed,
   };
