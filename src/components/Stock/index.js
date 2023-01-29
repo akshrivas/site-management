@@ -1,4 +1,4 @@
-import React, { createElement, useState } from "react";
+import React, { createElement } from "react";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -38,8 +38,7 @@ import useStock from "./useStock";
 
 export default function Stock() {
   const [openDrawer, setOpenDrawer] = React.useState(false);
-  const [saving, setSaving] = useState(false);
-  const { data, details, isLoading } = useStock();
+  const { data, details } = useStock();
 
   const handleVisibility = React.useCallback(() => {
     setOpenDrawer(!openDrawer);
@@ -59,14 +58,13 @@ export default function Stock() {
         data: updatedValues,
       })
       .then((response) => {
-        setSaving(false);
         if (response.data.id) {
           handleVisibility();
           // handleClose();
         }
       })
       .catch(() => {
-        setSaving(false);
+        // setSaving(false);
       });
   };
 
