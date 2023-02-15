@@ -14,12 +14,21 @@ import { LoadingButton } from "@mui/lab";
 import BMAlert from "../common/BMAlert";
 import Image from "next/image";
 import logo from "public/icons/152.png";
+import { Button } from "@mui/material";
+import Link from "src/Link";
+import { Stack } from "@mui/system";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+
+const guestUser = {
+  email: "test@homeo.com",
+  password: "123456",
+};
 
 export default function Login() {
   const classes = useStyles();
   const [user] = useState({
-    email: "admin@homeo.com",
-    password: "admin1234",
+    // email: "admin@homeo.com",
+    // password: "admin1234",
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(false);
@@ -125,6 +134,25 @@ export default function Login() {
             </LoadingButton>
           </form>
         </div>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Button variant="outlined" onClick={() => handleSubmit(guestUser)}>
+            Login as guest
+          </Button>
+          <Link
+            href="tel:7906011708"
+            sx={{
+              textDecoration: "none",
+            }}
+          >
+            <Button variant="outlined" startIcon={<LocalPhoneIcon />}>
+              Call Us
+            </Button>
+          </Link>
+        </Stack>
         <BMAlert message={message} setMessage={setMessage} />
       </Container>
     </>

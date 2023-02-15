@@ -24,6 +24,8 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { DATE_FORMAT } from "src/utils/constants";
@@ -37,7 +39,15 @@ import BasicMenu from "../common/BMMenu";
 import { get } from "lodash";
 
 export default function Beds() {
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedTab, setSelectedTab] = useState(0);
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const onTabChange = (val) => {
     setSelectedTab(val);
   };
@@ -120,6 +130,11 @@ export default function Beds() {
     ];
   };
 
+  const handleAdd = (type) => {
+    setOpen(type);
+    handleClose();
+  };
+
   if (isLoading) return <PageSpinner />;
 
   return (
@@ -128,6 +143,7 @@ export default function Beds() {
         open={open}
         handleClose={handleModalClose}
         bedNumber={beds.length + 1}
+        type={open}
       />
       {selectedBed && (
         <EditBed
@@ -149,7 +165,7 @@ export default function Beds() {
         <Typography variant="h5" color="primary">
           Beds
         </Typography>
-        <Button variant="outlined" onClick={() => setOpen(true)}>
+        <Button variant="outlined" onClick={handleClick}>
           Add Bed
         </Button>
       </Box>
@@ -315,6 +331,18 @@ export default function Beds() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={() => handleAdd("single")}>Single Bed</MenuItem>
+        <MenuItem onClick={() => handleAdd("multiple")}>Multiple Beds</MenuItem>
+      </Menu>
     </Container>
   );
 }

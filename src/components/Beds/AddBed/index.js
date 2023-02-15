@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState } from "react";
 import axios from "axios";
 import { useStyles } from "./addBedStyles";
@@ -9,19 +10,19 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useFormik } from "formik";
 import useUid from "src/utils/useUid";
 import { urlConstants } from "src/config";
 import UpsertBed from "../UpsertBed";
 import validationSchema, { initialValues } from "../bedSchema";
 import useSite from "src/hooks/useSite";
+import PageSpinner from "src/components/PageSpinner";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AddBed({ open, handleClose, bedNumber }) {
+export default function AddBed({ open, handleClose, bedNumber, type }) {
   const classes = useStyles();
   const uid = useUid();
   const [saving, setSaving] = useState(false);
@@ -38,23 +39,55 @@ export default function AddBed({ open, handleClose, bedNumber }) {
     },
   });
   const site = useSite();
-  const handleSubmit = (values) => {
-    axios
-      .post(`${urlConstants.bedOps}`, {
-        userId: uid,
-        site,
-        data: values,
-      })
-      .then((response) => {
+  const handleSubmit = async (values) => {
+    setSaving(true);
+    if (type === "single") {
+      axios
+        .post(`${urlConstants.bedOps}`, {
+          userId: uid,
+          site,
+          data: values,
+        })
+        .then((response) => {
+          setSaving(false);
+          if (response.data.id) {
+            handleClose();
+          }
+        })
+        .catch(() => {
+          setSaving(false);
+        });
+    } else {
+      const promises = [];
+      for (let i = 0; i < values.bedCount; i++) {
+        const a = {
+          ...values,
+          bedNumber: values.bedNumber + i,
+        };
+        const promise = axios.post(`${urlConstants.bedOps}`, {
+          userId: uid,
+          site,
+          data: a,
+        });
+        promises.push(promise);
+      }
+      try {
+        const responses = await Promise.all(promises);
         setSaving(false);
-        if (response.data.id) {
-          handleClose();
+        for (const response of responses) {
+          if (!response.data.id) {
+            return handleClose();
+          }
         }
-      })
-      .catch(() => {
-        setSaving(false);
-      });
+        return handleClose();
+      } catch (error) {
+        return handleClose();
+      }
+    }
   };
+
+  const loading = saving && open;
+
   return (
     <Dialog
       fullScreen
@@ -77,18 +110,12 @@ export default function AddBed({ open, handleClose, bedNumber }) {
             Add Bed
           </Typography>
           <Button autoFocus color="inherit" onClick={formik.handleSubmit}>
-            {saving ? (
-              <CircularProgress
-                color="white"
-                style={{ height: "20px", width: "20px" }}
-              />
-            ) : (
-              "Save"
-            )}
+            Save
           </Button>
         </Toolbar>
       </AppBar>
-      <UpsertBed handleSubmit={handleSubmit} formik={formik} action="add" />
+      {loading && <PageSpinner />}
+      {!loading && <UpsertBed formik={formik} type={type} />}
     </Dialog>
   );
 }

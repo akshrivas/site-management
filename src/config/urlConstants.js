@@ -11,6 +11,7 @@ const urlConstants = {
   bedOps: `${baseUrl}/api/beds`,
   stockOps: `${baseUrl}/api/stock`,
   usersOps: `${baseUrl}/api/users`,
+  siteOps: `${baseUrl}/api/site`,
 };
 
 export default urlConstants;

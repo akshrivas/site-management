@@ -1,38 +1,73 @@
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Box, Grid, TextField } from "@mui/material";
 import axios from "axios";
 import { useFormik } from "formik";
+import { useState } from "react";
 import { urlConstants } from "src/config";
 import useUid from "src/utils/useUid";
 import { profileInitialValues, profileSchema } from "./ProfileSchema";
+import { LoadingButton } from "@mui/lab";
+import useProfile from "src/hooks/useProfile";
 
 const Profile = () => {
+  const [saving, setSaving] = useState(false);
   const uid = useUid();
-  const handleSubmit = (values) => {
+  const profile = useProfile();
+  const saveProfile = (values) => {
     axios
-      .put(`${urlConstants.usersOps}/${uid}`, {
-        ...values,
+      .post(`${urlConstants.usersOps}`, {
+        userId: uid,
+        data: values,
       })
-      .then(() => {
-        // console.log(response);
-        // setSaving(false);
-        // if (response.status === 200) {
-        //   handleEditClose();
-        // }
+      .then((response) => {
+        setSaving(false);
+        if (response.data.id) {
+          // handleClose();
+        }
       })
       .catch(() => {
-        // setSaving(false);
+        setSaving(false);
       });
   };
+
+  const addSite = async (values) => {
+    return axios
+      .post(`${urlConstants.siteOps}`, {
+        userId: uid,
+        data: values,
+      })
+      .then((response) => {
+        setSaving(false);
+        return response?.data?.id;
+      })
+      .catch(() => {
+        setSaving(false);
+      });
+  };
+
+  const handleSubmit = async ({ name, mobile, address, ...rest }) => {
+    if (!profile) {
+      const site = await addSite(rest);
+      saveProfile({
+        name,
+        mobile,
+        address,
+        sites: [site],
+      });
+    }
+    //console.log(profile);
+    // saveProfile({
+    //   name,
+    //   mobile,
+    //   address,
+    // });
+  };
+
   const formik = useFormik({
     initialValues: profileInitialValues,
     validationSchema: profileSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
-      handleSubmit({
-        name: values.name,
-        mobile: values.mobile,
-        address: values.address,
-      });
+      handleSubmit(values);
     },
   });
   return (
@@ -204,14 +239,15 @@ const Profile = () => {
           />
         </Grid>
         <Grid xs={12}>
-          <Button
+          <LoadingButton
+            loading={saving}
+            size="large"
+            type="submit"
             variant="contained"
             color="primary"
-            type="submit"
-            disabled={!formik.dirty}
           >
             Save
-          </Button>
+          </LoadingButton>
         </Grid>
       </Grid>
     </Box>

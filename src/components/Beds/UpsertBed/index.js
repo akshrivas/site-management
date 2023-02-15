@@ -10,7 +10,7 @@ import statusOptions from "src/json/statusOptions.json";
 import moment from "moment";
 import { DATE_FORMAT_FIELDS } from "src/utils/constants";
 
-export default function UpsertBed({ formik }) {
+export default function UpsertBed({ formik, type }) {
   const getWormCount = () =>
     (formik.values.bedLength * formik.values.bedWidth) / 4;
 
@@ -19,25 +19,48 @@ export default function UpsertBed({ formik }) {
       <Grid item xs={12} sm={12}>
         <Card style={{ padding: 20 }}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={3}>
-              <FormControl fullWidth>
-                <TextField
-                  variant="outlined"
-                  label="Bed Number"
-                  id="bedNumber"
-                  name="bedNumber"
-                  type="number"
-                  value={formik.values.bedNumber}
-                  onChange={formik.handleChange}
-                  error={formik.touched.bedNumber && formik.errors.bedNumber}
-                  helperText={
-                    formik.touched.bedNumber && formik.errors.bedNumber
-                  }
-                  // disabled={uneditableAfterAdd}
-                  fullWidth
-                />
-              </FormControl>
-            </Grid>
+            {type !== "multiple" && (
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl fullWidth>
+                  <TextField
+                    variant="outlined"
+                    label="Bed Number"
+                    id="bedNumber"
+                    name="bedNumber"
+                    type="number"
+                    value={formik.values.bedNumber}
+                    onChange={formik.handleChange}
+                    error={formik.touched.bedNumber && formik.errors.bedNumber}
+                    helperText={
+                      formik.touched.bedNumber && formik.errors.bedNumber
+                    }
+                    // disabled={uneditableAfterAdd}
+                    fullWidth
+                  />
+                </FormControl>
+              </Grid>
+            )}
+            {type === "multiple" && (
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl fullWidth>
+                  <TextField
+                    variant="outlined"
+                    label="Number of beds"
+                    id="bedCount"
+                    name="bedCount"
+                    type="number"
+                    value={formik.values.bedCount}
+                    onChange={formik.handleChange}
+                    error={formik.touched.bedCount && formik.errors.bedCount}
+                    helperText={
+                      formik.touched.bedCount && formik.errors.bedCount
+                    }
+                    // disabled={uneditableAfterAdd}
+                    fullWidth
+                  />
+                </FormControl>
+              </Grid>
+            )}
             {/* <Grid item xs={12} md={6} lg={3}>
               <FormControl fullWidth>
                 <TextField
